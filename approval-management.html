@@ -287,10 +287,10 @@ a:hover {
                     <div class="absolute top-full right-0 mt-2 w-48 bg-white rounded-md shadow-lg p-2 hidden" id="profile-dropdown">
                         <div class="p-2 text-sm">
                             <p class="font-medium">Amy Miller</p>
-                            <p class="text-gray-500 text-xs">amy.miller@comfortcare.example</p>
+                            <p class="text-gray-500 text-xs">amy.miller@comfortcare.com</p>
                         </div>
                         <div class="border-t border-gray-100 my-1"></div>
-                        <a class="flex items-center gap-2 p-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md" href="/login.html">
+                        <a class="flex items-center gap-2 p-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md" href="login.html">
                             <i class="w-4 h-4" data-lucide="log-out"></i>
                             <span>Sign out</span>
                         </a>
@@ -602,7 +602,7 @@ a:hover {
                 
                 <!-- Back to Dashboard -->
                 <div class="mt-8 pt-6 border-t border-gray-200">
-                    <a class="btn btn-ghost border border-gray-200 px-4 py-2" href="/index.html">
+                    <a class="btn btn-ghost border border-gray-200 px-4 py-2" href="dashboard.html">
                         <i class="w-4 h-4" data-lucide="arrow-left"></i>
                         Back to Dashboard
                     </a>
@@ -769,7 +769,7 @@ a:hover {
             confirmRejection?.addEventListener('click', () => {
                 rejectionModal.classList.add('hidden');
                 alert(`Order ${currentOrderId} rejected successfully`);
-                window.location.href = '/index.html';
+                window.location.href = 'dashboard.html';
             });
             
             // Close modals when clicking outside
