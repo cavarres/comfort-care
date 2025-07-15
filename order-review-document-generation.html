@@ -421,7 +421,7 @@ a:hover {
                                 <p class="text-gray-500 text-xs">amy.miller@comfortcare.com</p>
                             </div>
                             <div class="border-t border-gray-100 my-1"></div>
-                            <a class="flex items-center gap-2 p-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md" href="login.html">
+                            <a class="flex items-center gap-2 p-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md" href="dashboard.html">
                                 <i class="w-4 h-4" data-lucide="log-out"></i>
                                 <span>Sign out</span>
                             </a>
@@ -622,12 +622,17 @@ a:hover {
                                 
                                 <!-- Pending Approval -->
                                 <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 hidden" id="pending-approval-banner">
-                                    <div class="flex items-center">
-                                        <i class="w-5 h-5 text-purple-500 mr-3" data-lucide="clock"></i>
-                                        <div>
-                                            <p class="font-medium text-purple-800">Approval Pending</p>
-                                            <p class="text-sm text-purple-700">Sent to manager for approval. You'll be notified once approved.</p>
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <i class="w-5 h-5 text-purple-500 mr-3" data-lucide="clock"></i>
+                                            <div>
+                                                <p class="font-medium text-purple-800">Approval Pending</p>
+                                                <p class="text-sm text-purple-700">Sent to manager for approval. <span class="font-medium">(For prototype: click approve button)</span></p>
+                                            </div>
                                         </div>
+                                        <button class="btn btn-ghost border border-purple-300 text-purple-700 hover:bg-purple-100 px-4 py-2" id="simulate-approval-btn">
+                                            Approve Order
+                                        </button>
                                     </div>
                                 </div>
                                 
@@ -831,7 +836,7 @@ a:hover {
                             
                             <div class="flex space-x-3">
                                 <button class="btn btn-ghost border border-gray-200 px-4 py-2" id="save-draft-btn" onclick="window.location.href='dashboard.html'">
-                                    Save Draft
+                                    Save
                                 </button>
                             </div>
                         </div>
@@ -1503,6 +1508,24 @@ a:hover {
                 document.getElementById('pending-approval-banner').classList.remove('hidden');
             });
             
+            // Simulate approval button (inside the pending banner)
+            const simulateApprovalBtn = document.getElementById('simulate-approval-btn');
+            simulateApprovalBtn.addEventListener('click', function() {
+                // Hide all other banners first
+                document.getElementById('approval-status-banner').classList.add('hidden');
+                document.getElementById('pending-approval-banner').classList.add('hidden');
+                
+                // Show approved banner
+                document.getElementById('approved-banner').classList.remove('hidden');
+                
+                // Activate first card (invoice)
+                activateCard('invoice-card', 1);
+                currentStep = 1;
+                
+                // Re-initialize icons
+                lucide.createIcons();
+            });
+            
             // Function to activate a card
             function activateCard(cardId, stepNumber) {
                 const card = document.getElementById(cardId);
@@ -1670,35 +1693,7 @@ customerservice@comfortcaremd.com`;
                 alert('Order workflow completed!');
             });
             
-            // For demo purposes: Add a button to simulate approval
-            const simulateApprovalBtn = document.createElement('button');
-            simulateApprovalBtn.className = 'fixed bottom-24 right-4 bg-green-500 text-white rounded-full p-2 z-30 shadow-lg';
-            simulateApprovalBtn.innerHTML = '<i data-lucide="check" class="w-5 h-5"></i>';
-            simulateApprovalBtn.title = 'Simulate Approval (Demo Only)';
-            document.body.appendChild(simulateApprovalBtn);
-            
-            simulateApprovalBtn.addEventListener('click', function() {
-                // Hide all other banners first
-                document.getElementById('approval-status-banner').classList.add('hidden');
-                document.getElementById('pending-approval-banner').classList.add('hidden');
-                
-                // Show approved banner
-                document.getElementById('approved-banner').classList.remove('hidden');
-                
-                // Activate first card (invoice)
-                activateCard('invoice-card', 1);
-                currentStep = 1;
-                
-                // Re-initialize icons
-                lucide.createIcons();
-            });
-            
-            // Initialize the demo button icon
-            lucide.createIcons({
-                icons: {
-                    'check': simulateApprovalBtn.querySelector('i')
-                }
-            });
+
         });
     </script>
 
