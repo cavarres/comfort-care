@@ -258,17 +258,17 @@ a:hover {
 </head>
 <body class="min-h-screen bg-background font-body">
     <!-- Prototype Navigation Bar -->
-    <div class="px-3 py-2 flex items-center justify-between shadow-md fixed top-0 left-0 right-0 z-50" style="background-color: rgb(43, 43, 46);">
+    <div class="px-3 py-2 flex items-center justify-between shadow-md fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
         <div class="flex items-center space-x-2">
             <!-- Back/Forward Navigation -->
             <div class="flex items-center space-x-1">
-                <button onclick="history.back()" class="p-1 rounded hover:bg-gray-700 transition-colors">
-                    <svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button onclick="history.back()" class="p-1 rounded hover:bg-gray-100 transition-colors">
+                    <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>
                 </button>
-                <button onclick="history.forward()" class="p-1 rounded hover:bg-gray-700 transition-colors">
-                    <svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button onclick="history.forward()" class="p-1 rounded hover:bg-gray-100 transition-colors">
+                    <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
                 </button>
@@ -276,22 +276,22 @@ a:hover {
             
             <!-- Page Dropdown -->
             <div class="relative">
-                <button id="pageDropdownBtn" class="flex items-center space-x-2 px-2 py-1 bg-gray-700 rounded border border-gray-600 hover:bg-gray-600 transition-colors min-w-[180px] justify-between">
-                    <span class="font-medium text-white text-sm">Approval Management</span>
-                    <svg class="w-3 h-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button id="pageDropdownBtn" class="flex items-center space-x-2 px-2 py-1 bg-gray-100 rounded border border-gray-300 hover:bg-gray-200 transition-colors min-w-[180px] justify-between">
+                    <span class="font-medium text-gray-800 text-sm">Approval Management</span>
+                    <svg class="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </button>
                 
                 <!-- Dropdown Menu -->
-                <div id="pageDropdownMenu" class="absolute top-full left-0 mt-1 w-full border border-gray-600 rounded shadow-lg z-50 hidden" style="background-color: rgb(43, 43, 46);">
+                <div id="pageDropdownMenu" class="absolute top-full left-0 mt-1 w-full bg-white border border-gray-300 rounded shadow-lg z-50 hidden">
                     <div class="py-1">
-                        <a href="login.html" class="block px-3 py-1 text-sm text-white hover:bg-white hover:text-gray-800">Login</a>
-                        <a href="dashboard.html" class="block px-3 py-1 text-sm text-white hover:bg-white hover:text-gray-800">Dashboard</a>
-                        <a href="encounter-form.html" class="block px-3 py-1 text-sm text-white hover:bg-white hover:text-gray-800">Encounter Form</a>
-                        <a href="order-items-accessories.html" class="block px-3 py-1 text-sm text-white hover:bg-white hover:text-gray-800">Order Items Accessories</a>
-                        <a href="order-review-document-generation.html" class="block px-3 py-1 text-sm text-white hover:bg-white hover:text-gray-800">Order Review Document Generation</a>
-                        <a href="approval-management.html" class="block px-3 py-1 text-sm text-white hover:bg-white hover:text-gray-800 flex justify-between items-center">
+                        <a href="login.html" class="block px-3 py-1 text-sm text-gray-800 hover:bg-gray-100">Login</a>
+                        <a href="dashboard.html" class="block px-3 py-1 text-sm text-gray-800 hover:bg-gray-100">Dashboard</a>
+                        <a href="encounter-form.html" class="block px-3 py-1 text-sm text-gray-800 hover:bg-gray-100">Encounter Form</a>
+                        <a href="order-items-accessories.html" class="block px-3 py-1 text-sm text-gray-800 hover:bg-gray-100">Order Items Accessories</a>
+                        <a href="order-review-document-generation.html" class="block px-3 py-1 text-sm text-gray-800 hover:bg-gray-100">Order Review Document Generation</a>
+                        <a href="approval-management.html" class="block px-3 py-1 text-sm text-gray-800 hover:bg-gray-100 flex justify-between items-center">
                             <span>Approval Management</span>
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -302,11 +302,7 @@ a:hover {
             </div>
         </div>
 
-        <!-- Center Logo and Title -->
-        <div class="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-1">
-            <img src="https://prototypes.turbotime.io/turboicon.svg" alt="Comfort Care Logo" class="w-5 h-5">
-            <span class="text-white font-semibold">Comfort Care</span>
-        </div>
+
     </div>
 
     <!-- Dropdown Toggle Script -->
