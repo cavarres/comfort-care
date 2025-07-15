@@ -1,0 +1,456 @@
+                    <!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Comfort Care - Encounter Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>// Tailwind CSS configuration file
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            colors: {
+                primary: "hsl(from var(--primary) h s l)", // main color for buttons, links, etc
+                secondary: "hsl(from var(--secondary) h s l)", // secondary color for buttons, links, etc
+                accent: "hsl(from var(--accent) h s l)", // accent color
+                background: "hsl(from var(--background) h s l)", // body background color
+                foreground: "hsl(from var(--text) h s l)", // text color
+            },
+            fontFamily: {
+                header: ["var(--font-header)", "sans-serif"],
+                body: ["var(--font-body)", "sans-serif"],
+            },
+            borderRadius: {
+                default: 'var(--border-radius)',
+            },
+        },
+    },
+};</script>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans&display=swap');
+
+:root {
+    --text: #4A4A4A;
+    --accent: hsl(from var(--primary) calc(h + 60) calc(s - 10%) calc(l + 20%));
+    --primary: #8E4C77;
+    --font-body: Instrument Sans;
+    --secondary: #5B8C9F;
+    --background: #F7F7F9;
+    --font-header: Instrument Sans;
+    --border-radius: 8px;
+}
+
+
+.rounded-default {
+    border-radius: var(--border-radius);
+}
+
+.rounded-lg {
+    border-radius: calc(var(--border-radius) + 4px);
+}
+
+.rounded-md {
+    border-radius: calc(var(--border-radius) + 2px);
+}
+
+.rounded-sm {
+    border-radius: calc(var(--border-radius) - 2px);
+}
+</style>
+    <style>body {
+    color: var(--text);
+    font-family: var(--font-body);
+    background-color: var(--background);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text);
+    font-family: var(--font-header);
+}
+
+a {
+    color: var(--secondary);
+}
+
+a:hover {
+    color: hsl(from var(--secondary) h s calc(l * 0.8));
+}
+
+.btn {
+    font-weight: 600;
+    border-radius: var(--border-radius);
+}
+
+.btn:focus-visible {
+    outline-color: hsl(from var(--secondary) h s l);
+}
+
+.btn-primary {
+    color: #ffffff;
+    background-color: var(--primary);
+}
+
+.btn-primary:hover:not(:disabled) {
+    color: #ffffff;
+    background-color: hsl(from var(--primary) h s calc(l * 0.9));
+}
+
+.btn-secondary {
+    color: #ffffff;
+    border-radius: 9999px;
+    background-color: var(--secondary);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    color: #ffffff;
+    background-color: hsl(from var(--secondary) h s calc(l * 0.8));
+}
+
+.btn-ghost {
+    color: var(--text);
+    background-color: transparent;
+}
+
+.btn-ghost:hover:not(:disabled) {
+    background-color: hsl(from var(--text) h s l / 0.05);
+}
+
+.card {
+    border: 1px solid hsl(from var(--text) h s l / 0.1);
+    border-radius: calc(var(--border-radius) * 2);
+    background-color: #ffffff;
+}
+
+.form-control {
+    border: 1px solid hsl(from var(--text) h s l / 0.1);
+    border-radius: var(--border-radius);
+    background-color: #ffffff;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 3px hsl(from var(--secondary) h s l / 0.25);
+    border-color: var(--secondary);
+}
+
+.navbar {
+    background-color: #ffffff;
+}
+
+.nav-link {
+    color: var(--text);
+}
+
+.nav-link:hover {
+    color: var(--secondary);
+}
+
+.alert-success {
+    color: hsl(from var(--primary) h s 20%);
+    border-color: hsl(from var(--primary) h s 85%);
+    background-color: hsl(from var(--primary) h s 92%);
+}
+
+.alert-error {
+    color: hsl(from var(--primary) calc(h - 88) s 25%);
+    border-color: hsl(from var(--primary) calc(h - 88) s 85%);
+    background-color: hsl(from var(--primary) calc(h - 88) s 92%);
+}
+
+.alert-info {
+    color: hsl(from var(--secondary) h s 20%);
+    border-color: hsl(from var(--secondary) h s 85%);
+    background-color: hsl(from var(--secondary) h s 92%);
+}</style>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        .form-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.625rem 0.75rem;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--border-radius);
+            background-color: white;
+            transition: border-color 0.2s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Sales order badge */
+        .sales-order-badge {
+            background-color: hsl(from var(--primary) h s 95%);
+            color: var(--primary);
+            font-weight: 500;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+        }
+        
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 50;
+            transform: translateY(-100%);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-background font-body">
+    <div class="min-h-screen bg-background">
+        <!-- Header -->
+        <header class="bg-white shadow-sm py-4 px-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <a href="/index.html">
+                        <img alt="Comfort Care Logo" class="w-10 h-10 rounded-md" onerror="this.onerror=null; this.src='https://placehold.co/60x60/8E4C77/FFFFFF?text=CC'" src="https://placehold.co/60x60/8E4C77/FFFFFF?text=CC">
+                    </a>
+                    <div>
+                        <h1 class="text-xl font-bold mb-0">New Encounter</h1>
+                        <p class="text-sm text-gray-500">Create a new patient encounter</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <button class="p-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors" id="notifications-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="bell" class="lucide lucide-bell w-6 h-6"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
+                            <span class="sr-only">Notifications</span>
+                        </button>
+                    </div>
+                    
+                    <div class="relative">
+                        <button class="p-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors" id="profile-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="user" class="lucide lucide-user w-6 h-6"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                            <span class="sr-only">User Profile</span>
+                        </button>
+                        
+                        <div class="absolute top-full right-0 mt-2 w-48 bg-white rounded-md shadow-lg p-2 hidden" id="profile-dropdown">
+                            <div class="p-2 text-sm">
+                                <p class="font-medium">Amy Johnson</p>
+                                <p class="text-gray-500 text-xs">amy.j@comfortcare.com</p>
+                            </div>
+                            <div class="border-t border-gray-100 my-1"></div>
+                            <a class="flex items-center gap-2 p-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md" href="/login.html">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="log-out" class="lucide lucide-log-out w-4 h-4"><path d="m16 17 5-5-5-5"></path><path d="M21 12H9"></path><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path></svg>
+                                <span>Sign out</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Encounter Form Section -->
+        <div class="p-6">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-semibold">Encounter Information</h2>
+                            <div class="sales-order-badge">
+                                SO-2023-1459
+                            </div>
+                        </div>
+                        
+                        <form action="/order/items.html" method="GET">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 form-grid">
+                                <!-- Left Column -->
+                                <div>
+                                    <div class="mb-4">
+                                        <label class="form-label" for="patient-id">PATIENT ID</label>
+                                        <input class="form-input" id="patient-id" name="patient-id" required="" type="text" value="PT-78945"/>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label" for="coverage">COVERAGE %</label>
+                                        <input class="form-input" id="coverage" name="coverage" type="number" value="80"/>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label" for="deductible">DEDUCTIBLE</label>
+                                        <input class="form-input" id="deductible" name="deductible" type="text" value="1500.00"/>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label" for="ded-met">DED MET ($)</label>
+                                        <input class="form-input" id="ded-met" name="ded-met" type="text" value="750.00"/>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label" for="state">STATE</label>
+                                        <select class="form-input" id="state" name="state" required="">
+                                            <option value=""></option>
+                                            <option value="AL">Alabama</option>
+                                            <option value="AK">Alaska</option>
+                                            <option value="AZ">Arizona</option>
+                                            <option value="AR">Arkansas</option>
+                                            <option selected="" value="CA">California</option>
+                                            <option value="CO">Colorado</option>
+                                            <option value="CT">Connecticut</option>
+                                            <!-- More states would be listed here -->
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <!-- Right Column -->
+                                <div>
+                                    <div class="mb-4">
+                                        <label class="form-label" for="name">NAME</label>
+                                        <input class="form-input" id="name" name="name" type="text" value="Maria Rodriguez"/>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label" for="sales-order">SALES ORDER</label>
+                                        <input class="form-input" id="sales-order" name="sales-order" readonly="" required="" type="text" value="SO-2023-1459"/>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label" for="primary">PRIMARY</label>
+                                        <input class="form-input" id="primary" name="primary" type="text" value="Blue Cross"/>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label" for="secondary">SECONDARY</label>
+                                        <input class="form-input" id="secondary" name="secondary" type="text" value="None"/>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label" for="del-type">DEL TYPE</label>
+                                        <select class="form-input" id="del-type" name="del-type">
+                                            <option value=""></option>
+                                            <option selected="" value="CLINIC/FACILITY">CLINIC/FACILITY</option>
+                                            <option value="PT ADDRESS">PT ADDRESS</option>
+                                            <option value="UNDETERMINED">UNDETERMINED</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-2">
+                                <div class="mb-4">
+                                    <label class="form-label" for="del-address">DEL ADDRESS</label>
+                                    <input class="form-input" id="del-address" name="del-address" type="text" value="123 Medical Center Dr, Los Angeles, CA 90001"/>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-8 flex justify-between">
+                                <a class="btn btn-ghost flex items-center" href="/index.html">
+                                    <i class="w-4 h-4 mr-2" data-lucide="arrow-left"></i>
+                                    Back to Dashboard
+                                </a>
+                                
+                                <div class="flex space-x-3">
+                                    <button class="btn btn-ghost border border-gray-200 px-4 py-2" id="save-draft" type="button">
+                                        Save Draft
+                                    </button>
+                                    <button class="btn btn-primary px-6 py-2" type="submit">
+                                        Continue
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Notification -->
+    <div class="toast bg-white border border-gray-200 shadow-lg rounded-lg p-4 max-w-md" id="toast">
+        <div class="flex items-start">
+            <div class="flex-shrink-0 mr-3">
+                <i class="w-5 h-5 text-green-500" data-lucide="check-circle"></i>
+            </div>
+            <div>
+                <h3 class="font-medium">Draft saved</h3>
+                <p class="text-sm text-gray-600 mt-1">Your encounter form has been saved as a draft.</p>
+            </div>
+            <button class="ml-auto flex-shrink-0" id="close-toast">
+                <i class="w-4 h-4 text-gray-400" data-lucide="x"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+            
+            // Notification button click handler
+            const notificationsButton = document.getElementById('notifications-button');
+            notificationsButton.addEventListener('click', () => {
+                // Navigate to approval management screen
+                window.location.href = '/approval-management.html';
+            });
+            
+            // Profile dropdown toggle
+            const profileButton = document.getElementById('profile-button');
+            const profileDropdown = document.getElementById('profile-dropdown');
+            
+            profileButton.addEventListener('click', () => {
+                profileDropdown.classList.toggle('hidden');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (event) => {
+                if (!profileButton.contains(event.target) && !profileDropdown.contains(event.target)) {
+                    profileDropdown.classList.add('hidden');
+                }
+            });
+            
+            // Save draft button
+            const saveDraftButton = document.getElementById('save-draft');
+            saveDraftButton.addEventListener('click', function() {
+                const toast = document.getElementById('toast');
+                toast.querySelector('h3').textContent = 'Draft saved';
+                toast.querySelector('p').textContent = 'Your encounter form has been saved as a draft.';
+                toast.querySelector('i').setAttribute('data-lucide', 'check-circle');
+                toast.classList.add('show');
+                
+                // Re-initialize the icon
+                lucide.createIcons({
+                    icons: {
+                        'check-circle': toast.querySelector('i')
+                    }
+                });
+                
+                // Hide toast after 3 seconds
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            });
+            
+            // Close toast button
+            const closeToastButton = document.getElementById('close-toast');
+            closeToastButton.addEventListener('click', function() {
+                const toast = document.getElementById('toast');
+                toast.classList.remove('show');
+            });
+        });
+    </script>
+
+</body></html>
+                

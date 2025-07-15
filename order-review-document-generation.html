@@ -1,0 +1,1706 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Comfort Care - Order Review &amp; Document Generation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>// Tailwind CSS configuration file
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            colors: {
+                primary: "hsl(from var(--primary) h s l)", // main color for buttons, links, etc
+                secondary: "hsl(from var(--secondary) h s l)", // secondary color for buttons, links, etc
+                accent: "hsl(from var(--accent) h s l)", // accent color
+                background: "hsl(from var(--background) h s l)", // body background color
+                foreground: "hsl(from var(--text) h s l)", // text color
+            },
+            fontFamily: {
+                header: ["var(--font-header)", "sans-serif"],
+                body: ["var(--font-body)", "sans-serif"],
+            },
+            borderRadius: {
+                default: 'var(--border-radius)',
+            },
+        },
+    },
+};</script>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans&display=swap');
+
+:root {
+    --text: #4A4A4A;
+    --accent: hsl(from var(--primary) calc(h + 60) calc(s - 10%) calc(l + 20%));
+    --primary: #8E4C77;
+    --font-body: Instrument Sans;
+    --secondary: #5B8C9F;
+    --background: #F7F7F9;
+    --font-header: Instrument Sans;
+    --border-radius: 8px;
+}
+
+
+.rounded-default {
+    border-radius: var(--border-radius);
+}
+
+.rounded-lg {
+    border-radius: calc(var(--border-radius) + 4px);
+}
+
+.rounded-md {
+    border-radius: calc(var(--border-radius) + 2px);
+}
+
+.rounded-sm {
+    border-radius: calc(var(--border-radius) - 2px);
+}
+</style>
+    <style>body {
+    color: var(--text);
+    font-family: var(--font-body);
+    background-color: var(--background);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text);
+    font-family: var(--font-header);
+}
+
+a {
+    color: var(--secondary);
+}
+
+a:hover {
+    color: hsl(from var(--secondary) h s calc(l * 0.8));
+}
+
+.btn {
+    font-weight: 600;
+    border-radius: var(--border-radius);
+}
+
+.btn:focus-visible {
+    outline-color: hsl(from var(--secondary) h s l);
+}
+
+.btn-primary {
+    color: #ffffff;
+    background-color: var(--primary);
+}
+
+.btn-primary:hover:not(:disabled) {
+    color: #ffffff;
+    background-color: hsl(from var(--primary) h s calc(l * 0.9));
+}
+
+.btn-secondary {
+    color: #ffffff;
+    border-radius: 9999px;
+    background-color: var(--secondary);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    color: #ffffff;
+    background-color: hsl(from var(--secondary) h s calc(l * 0.8));
+}
+
+.btn-ghost {
+    color: var(--text);
+    background-color: transparent;
+}
+
+.btn-ghost:hover:not(:disabled) {
+    background-color: hsl(from var(--text) h s l / 0.05);
+}
+
+.card {
+    border: 1px solid hsl(from var(--text) h s l / 0.1);
+    border-radius: calc(var(--border-radius) * 2);
+    background-color: #ffffff;
+}
+
+.form-control {
+    border: 1px solid hsl(from var(--text) h s l / 0.1);
+    border-radius: var(--border-radius);
+    background-color: #ffffff;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 3px hsl(from var(--secondary) h s l / 0.25);
+    border-color: var(--secondary);
+}
+
+.navbar {
+    background-color: #ffffff;
+}
+
+.nav-link {
+    color: var(--text);
+}
+
+.nav-link:hover {
+    color: var(--secondary);
+}
+
+.alert-success {
+    color: hsl(from var(--primary) h s 20%);
+    border-color: hsl(from var(--primary) h s 85%);
+    background-color: hsl(from var(--primary) h s 92%);
+}
+
+.alert-error {
+    color: hsl(from var(--primary) calc(h - 88) s 25%);
+    border-color: hsl(from var(--primary) calc(h - 88) s 85%);
+    background-color: hsl(from var(--primary) calc(h - 88) s 92%);
+}
+
+.alert-info {
+    color: hsl(from var(--secondary) h s 20%);
+    border-color: hsl(from var(--secondary) h s 85%);
+    background-color: hsl(from var(--secondary) h s 92%);
+}</style>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            height: calc(100vh - 61px);
+            overflow: hidden;
+        }
+        
+        .left-panel, .center-panel, .right-panel {
+            overflow-y: auto;
+            height: 100%;
+        }
+        
+        .left-panel {
+            border-right: 1px solid #e5e7eb;
+        }
+        
+        .right-panel {
+            border-left: 1px solid #e5e7eb;
+        }
+        
+        .summary-card {
+            border: 1px solid #e5e7eb;
+            border-radius: var(--border-radius);
+            background-color: white;
+            transition: all 0.2s ease;
+            margin-bottom: 1rem;
+        }
+        
+        .document-preview-card {
+            border: 1px solid #e5e7eb;
+            border-radius: var(--border-radius);
+            background-color: white;
+            transition: all 0.2s ease;
+        }
+        
+        .calculation-summary-card {
+            background-color: hsl(from var(--primary) h s 97%);
+            border: 1px solid hsl(from var(--primary) h s 90%);
+            border-radius: var(--border-radius);
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .status-indicator.warning {
+            background-color: #FEF7E9;
+            color: #D97706;
+        }
+        
+        .status-indicator.success {
+            background-color: #ECFDF5;
+            color: #059669;
+        }
+        
+        .status-indicator.pending {
+            background-color: #F0E6FF;
+            color: #9D4EDD;
+        }
+        
+        .document-tabs {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .document-tab {
+            padding: 0.75rem 1rem;
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+            color: #6b7280;
+            cursor: pointer;
+        }
+        
+        .document-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .document-thumbnail {
+            width: 100%;
+            height: 160px;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            background-color: white;
+            z-index: 10;
+        }
+        
+        .sticky-footer {
+            position: sticky;
+            bottom: 0;
+            background-color: white;
+            z-index: 10;
+            border-top: 1px solid #e5e7eb;
+            padding: 1rem;
+        }
+        
+        .approval-banner {
+            background-color: #FEF7E9;
+            border: 1px solid #FCEAC6;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+        }
+        
+        .pending-banner {
+            background-color: #F0E6FF;
+            border: 1px solid #E2CCFF;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+        }
+        
+        .ready-banner {
+            background-color: #ECFDF5;
+            border: 1px solid #D1FAE5;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+        }
+        
+        .step-circle {
+            background-color: var(--primary);
+            color: white;
+            border-radius: 9999px;
+            width: 1.5rem;
+            height: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+        
+        .step-circle.inactive {
+            background-color: #e5e7eb;
+            color: #6b7280;
+        }
+        
+        .mobile-tabs {
+            display: none;
+            border-bottom: 1px solid #e5e7eb;
+            width: 100%;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        .par-tag {
+            background-color: #FEF7E9;
+            color: #D97706;
+            font-size: 0.625rem;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            margin-left: 0.5rem;
+        }
+        
+        /* Better mobile responsiveness */
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .right-panel {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                display: block;
+                height: auto;
+                overflow: visible;
+            }
+            
+            .left-panel, .center-panel {
+                width: 100%;
+                height: auto;
+                overflow: visible;
+                border: none;
+            }
+            
+            .left-panel {
+                border-bottom: 1px solid #e5e7eb;
+                padding-bottom: 1rem;
+            }
+            
+            .mobile-tabs {
+                display: flex;
+            }
+            
+            .document-tabs.desktop-tabs {
+                display: none;
+            }
+            
+            .sticky-footer {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background-color: white;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            }
+            
+            body {
+                padding-bottom: 5rem;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-background font-body">
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="bg-white shadow-sm py-4 px-6 sticky top-0 z-20">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <a href="/index.html">
+                        <img alt="Comfort Care Logo" class="w-10 h-10 rounded-md" onerror="this.onerror=null; this.src='https://placehold.co/60x60/8E4C77/FFFFFF?text=CC'" src="https://placehold.co/60x60/8E4C77/FFFFFF?text=CC">
+                    </a>
+                    <div>
+                        <h1 class="text-xl font-bold mb-0">Order Review</h1>
+                        <p class="text-sm text-gray-500">Review and generate documents</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <button class="p-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors" id="notifications-button">
+                            <i class="w-6 h-6" data-lucide="bell"></i>
+                            <span class="sr-only">Notifications</span>
+                        </button>
+                    </div>
+                    
+                    <div class="relative">
+                        <button class="p-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors" id="profile-button">
+                            <i class="w-6 h-6" data-lucide="user"></i>
+                            <span class="sr-only">User Profile</span>
+                        </button>
+                        
+                        <div class="absolute top-full right-0 mt-2 w-48 bg-white rounded-md shadow-lg p-2 hidden" id="profile-dropdown">
+                            <div class="p-2 text-sm">
+                                <p class="font-medium">Amy Miller</p>
+                                <p class="text-gray-500 text-xs">amy.miller@comfortcare.com</p>
+                            </div>
+                            <div class="border-t border-gray-100 my-1"></div>
+                            <a class="flex items-center gap-2 p-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md" href="/login.html">
+                                <i class="w-4 h-4" data-lucide="log-out"></i>
+                                <span>Sign out</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <div class="p-6">
+            <div class="max-w-6xl mx-auto">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h2 class="text-xl font-semibold">Order Review & Document Generation</h2>
+                            <p class="text-sm text-gray-600 mt-1">Review order details and generate required documents</p>
+                        </div>
+                        <div class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">
+                            SO-2023-1459
+                        </div>
+                    </div>
+                    
+                                        <!-- Main Content - Order Summary -->
+                    <div class="max-w-6xl mx-auto">
+                        <!-- Order Summary Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                            <!-- Patient & Insurance Card -->
+                            <div class="bg-white border border-gray-200 rounded-lg p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-semibold text-gray-900">Patient & Insurance</h3>
+                                    <a class="text-primary text-sm hover:underline" href="/encounter/new.html">Edit</a>
+                                </div>
+                                
+                                <div class="space-y-4">
+                                    <div>
+                                        <h4 class="font-medium text-gray-700 mb-2">Patient Information</h4>
+                                        <div class="space-y-1 text-sm">
+                                            <div class="flex justify-between">
+                                                <span class="text-gray-500">Patient ID:</span>
+                                                <span class="font-medium">PT-78945</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-gray-500">Name:</span>
+                                                <span class="font-medium">Maria Rodriguez</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-gray-500">State:</span>
+                                                <span class="font-medium">California</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="border-t border-gray-100 pt-4">
+                                        <h4 class="font-medium text-gray-700 mb-2">Insurance</h4>
+                                        <div class="space-y-1 text-sm">
+                                            <div class="flex justify-between">
+                                                <span class="text-gray-500">Primary:</span>
+                                                <span class="font-medium">Blue Cross</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-gray-500">Coverage:</span>
+                                                <span class="font-medium">80%</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-gray-500">Deductible:</span>
+                                                <span class="font-medium">$1,500.00</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-gray-500">Deductible Met:</span>
+                                                <span class="font-medium">$750.00</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Order Items Card -->
+                            <div class="bg-white border border-gray-200 rounded-lg p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-semibold text-gray-900">Order Items</h3>
+                                    <a class="text-primary text-sm hover:underline" href="/order-items-accessories.html">Edit</a>
+                                </div>
+                                
+                                <div class="space-y-3">
+                                    <div class="border-b border-gray-100 pb-2">
+                                        <div class="flex justify-between items-start mb-1">
+                                            <span class="text-sm font-medium">Mastectomy Bra</span>
+                                            <span class="text-sm font-semibold">$130.00</span>
+                                        </div>
+                                        <div class="flex justify-between text-xs text-gray-500">
+                                            <span>HCPCS: L8000</span>
+                                            <span>Qty: 2 × $65.00</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="border-b border-gray-100 pb-2">
+                                        <div class="flex justify-between items-start mb-1">
+                                            <div class="flex items-center">
+                                                <span class="text-sm font-medium">Breast Prosthesis</span>
+                                                <span class="bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded ml-2">PAR</span>
+                                            </div>
+                                            <span class="text-sm font-semibold">$450.00</span>
+                                        </div>
+                                        <div class="flex justify-between text-xs text-gray-500">
+                                            <span>HCPCS: L8030</span>
+                                            <span>Qty: 1 × $450.00</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <div class="flex justify-between items-start mb-1">
+                                            <span class="text-sm font-medium">Adhesive Strips</span>
+                                            <span class="text-sm font-semibold">$25.00</span>
+                                        </div>
+                                        <div class="flex justify-between text-xs text-gray-500">
+                                            <span>HCPCS: A4452</span>
+                                            <span>Qty: 1 × $25.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Financial Summary Card -->
+                            <div class="bg-white border-2 border-dashed border-blue-300 rounded-lg p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-semibold text-blue-900">Financial Summary</h3>
+                                </div>
+                                
+                                <div class="space-y-4">
+                                    <div>
+                                        <h4 class="font-medium text-blue-800 mb-2">Billing Details</h4>
+                                        <div class="space-y-1 text-sm">
+                                            <div class="flex justify-between">
+                                                <span class="text-gray-500">Billable Amount:</span>
+                                                <span class="font-medium">$605.00</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-gray-500">Payable %:</span>
+                                                <span class="font-medium">80%</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-gray-500">Insurance Pays:</span>
+                                                <span class="font-medium">$484.00</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="border-t border-gray-100 pt-4">
+                                        <h4 class="font-medium text-blue-800 mb-2">Patient Responsibility</h4>
+                                        <div class="space-y-1 text-sm">
+                                            <div class="flex justify-between">
+                                                <span class="text-gray-500">Deductible Applied:</span>
+                                                <span class="font-medium">$0.00</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-gray-500">Co-Insurance:</span>
+                                                <span class="font-medium">$121.00</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-gray-500">Total Patient Resp:</span>
+                                                <span class="font-medium text-amber-600">$121.00</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        
+                        <!-- Document Workflow -->
+                        <div class="border-t border-gray-200 pt-6 mt-6">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="text-lg font-semibold text-gray-900">Document Workflow</h3>
+                                <button class="btn btn-ghost border border-gray-200 text-sm flex items-center px-4 py-2">
+                                    <i class="w-4 h-4 mr-2" data-lucide="download"></i>
+                                    Download All
+                                </button>
+                            </div>
+                            
+                            <!-- Approval Status Banner -->
+                            <div class="mb-6">
+                                <!-- Approval Required -->
+                                <div class="bg-amber-50 border border-amber-200 rounded-lg p-4" id="approval-status-banner">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <i class="w-5 h-5 text-amber-500 mr-3" data-lucide="alert-triangle"></i>
+                                            <div>
+                                                <p class="font-medium text-amber-800">Manager Approval Required</p>
+                                                <p class="text-sm text-amber-700">This order contains items requiring prior authorization (L8030)</p>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-primary px-4 py-2" id="request-approval-btn">
+                                            Request Approval
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Pending Approval -->
+                                <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 hidden" id="pending-approval-banner">
+                                    <div class="flex items-center">
+                                        <i class="w-5 h-5 text-purple-500 mr-3" data-lucide="clock"></i>
+                                        <div>
+                                            <p class="font-medium text-purple-800">Approval Pending</p>
+                                            <p class="text-sm text-purple-700">Sent to manager for approval. You'll be notified once approved.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Approved -->
+                                <div class="bg-green-50 border border-green-200 rounded-lg p-4 hidden" id="approved-banner">
+                                    <div class="flex items-center">
+                                        <i class="w-5 h-5 text-green-500 mr-3" data-lucide="check-circle"></i>
+                                        <div>
+                                            <p class="font-medium text-green-800">Order Approved</p>
+                                            <p class="text-sm text-green-700">Manager has approved this order. You can now proceed with the workflow.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <!-- Step 1: Patient Invoice -->
+                                <div class="bg-white border-2 border-gray-200 rounded-lg overflow-hidden" id="invoice-card">
+                                    <!-- Step header -->
+                                    <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center">
+                                                <div class="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center text-white font-bold text-xs mr-2" id="invoice-step-indicator">
+                                                    1
+                                                </div>
+                                                <span class="text-sm font-medium text-gray-700">Step 1</span>
+                                            </div>
+                                            <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600" id="invoice-status">
+                                                Waiting for approval
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="p-6">
+                                    <div class="flex items-center mb-4">
+                                            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4">
+                                                <i class="w-6 h-6 text-primary" data-lucide="file-text"></i>
+                                        </div>
+                                            <div>
+                                                <h4 class="font-semibold text-gray-900">Patient Invoice</h4>
+                                                <p class="text-sm text-gray-500">Invoice + Consent Form</p>
+                                    </div>
+                                        </div>
+                                        
+                                        <p class="text-sm text-gray-600 mb-6">Send to patient for signature and payment</p>
+                                        
+                                        <div class="space-y-3">
+                                            <div class="flex space-x-2">
+                                                <button class="btn btn-ghost border border-gray-200 text-sm flex items-center justify-center py-2 px-3 flex-1">
+                                                    <i class="w-4 h-4 mr-2" data-lucide="download"></i>Download
+                                                </button>
+                                                <button class="btn btn-ghost border border-gray-200 text-sm flex items-center justify-center py-2 px-3 w-10" id="view-invoice-btn">
+                                                    <i class="w-4 h-4" data-lucide="eye"></i>
+                                                </button>
+                                            </div>
+                                            
+                                            <!-- Workflow Actions -->
+                                            <button class="btn btn-primary w-full py-2.5 text-sm font-medium opacity-50 cursor-not-allowed flex items-center justify-center" id="send-invoice-btn" disabled>
+                                                <i class="w-4 h-4 mr-2" data-lucide="send"></i>
+                                                Send to Patient
+                                            </button>
+                                            
+                                            <button class="btn btn-secondary w-full py-2.5 text-sm font-medium opacity-50 cursor-not-allowed hidden flex items-center justify-center" id="mark-invoice-complete-btn" disabled>
+                                                <i class="w-4 h-4 mr-2" data-lucide="check"></i>
+                                                Mark as Signed & Paid
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Step 2: Sales Order -->
+                                <div class="bg-white border-2 border-gray-200 rounded-lg overflow-hidden opacity-50" id="sales-order-card">
+                                    <!-- Step header -->
+                                    <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center">
+                                                <div class="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center text-white font-bold text-xs mr-2" id="sales-order-step-indicator">
+                                                    2
+                                                </div>
+                                                <span class="text-sm font-medium text-gray-700">Step 2</span>
+                                            </div>
+                                            <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600" id="sales-order-status">
+                                                Waiting
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="p-6">
+                                    <div class="flex items-center mb-4">
+                                            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4">
+                                                <i class="w-6 h-6 text-primary" data-lucide="shopping-cart"></i>
+                                        </div>
+                                            <div>
+                                        <h4 class="font-semibold text-gray-900">Sales Order</h4>
+                                                <p class="text-sm text-gray-500">Order details for vendor</p>
+                                    </div>
+                                        </div>
+                                        
+                                        <p class="text-sm text-gray-600 mb-6">Send to vendor for fulfillment</p>
+                                        
+                                                                                <div class="space-y-3">
+                                            <div class="flex space-x-2">
+                                                <button class="btn btn-ghost border border-gray-200 text-sm flex items-center justify-center py-2 px-3 flex-1">
+                                                    <i class="w-4 h-4 mr-2" data-lucide="download"></i>Download
+                                                </button>
+                                                <button class="btn btn-ghost border border-gray-200 text-sm flex items-center justify-center py-2 px-3 w-10" id="view-sales-order-btn">
+                                                    <i class="w-4 h-4" data-lucide="eye"></i>
+                                                </button>
+                                            </div>
+                                            
+                                            <!-- Workflow Actions -->
+                                            <button class="btn btn-primary w-full py-2.5 text-sm font-medium opacity-50 cursor-not-allowed flex items-center justify-center" id="send-sales-order-btn" disabled>
+                                                <i class="w-4 h-4 mr-2" data-lucide="send"></i>
+                                                Send to Vendor
+                                            </button>
+                                            
+                                            <button class="btn btn-secondary w-full py-2.5 text-sm font-medium opacity-50 cursor-not-allowed hidden flex items-center justify-center" id="mark-sales-order-complete-btn" disabled>
+                                                <i class="w-4 h-4 mr-2" data-lucide="truck"></i>
+                                                Order Confirmation Received
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Step 3: Proof of Delivery -->
+                                <div class="bg-white border-2 border-gray-200 rounded-lg overflow-hidden opacity-50" id="proof-delivery-card">
+                                    <!-- Step header -->
+                                    <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center">
+                                                <div class="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center text-white font-bold text-xs mr-2" id="proof-delivery-step-indicator">
+                                                    3
+                                                </div>
+                                                <span class="text-sm font-medium text-gray-700">Step 3</span>
+                                            </div>
+                                            <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600" id="proof-delivery-status">
+                                                Waiting
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="p-6">
+                                    <div class="flex items-center mb-4">
+                                            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4">
+                                                <i class="w-6 h-6 text-primary" data-lucide="truck"></i>
+                                        </div>
+                                            <div>
+                                        <h4 class="font-semibold text-gray-900">Proof of Delivery</h4>
+                                                <p class="text-sm text-gray-500">Delivery confirmation</p>
+                                    </div>
+                                        </div>
+                                        
+                                        <p class="text-sm text-gray-600 mb-6">Send to patient to complete order</p>
+                                        
+                                        <div class="space-y-3">
+                                            <div class="flex space-x-2">
+                                                <button class="btn btn-ghost border border-gray-200 text-sm flex items-center justify-center py-2 px-3 flex-1">
+                                                    <i class="w-4 h-4 mr-2" data-lucide="download"></i>Download
+                                                </button>
+                                                <button class="btn btn-ghost border border-gray-200 text-sm flex items-center justify-center py-2 px-3 w-10" id="view-proof-delivery-btn">
+                                                    <i class="w-4 h-4" data-lucide="eye"></i>
+                                                </button>
+                                            </div>
+                                            
+                                            <!-- Workflow Actions -->
+                                            <button class="btn btn-primary w-full py-2.5 text-sm font-medium opacity-50 cursor-not-allowed flex items-center justify-center" id="send-proof-delivery-btn" disabled>
+                                                <i class="w-4 h-4 mr-2" data-lucide="send"></i>
+                                                Send to Patient
+                                            </button>
+                                            
+                                            <button class="btn btn-secondary w-full py-2.5 text-sm font-medium opacity-50 cursor-not-allowed hidden flex items-center justify-center" id="mark-proof-delivery-complete-btn" disabled>
+                                                <i class="w-4 h-4 mr-2" data-lucide="check-circle"></i>
+                                                Mark Complete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Status Section -->
+                    <div class="px-6 py-4">
+                        <div class="max-w-6xl mx-auto">
+                            
+
+                        </div>
+                        </div>
+                    </div>
+                    
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="border-t border-gray-200 bg-white px-6 py-4">
+                        <div class="max-w-6xl mx-auto flex justify-between items-center">
+                            <a class="btn btn-ghost border border-gray-200 flex items-center px-4 py-2" href="/order-items-accessories.html">
+                                <i class="w-4 h-4 mr-2" data-lucide="arrow-left"></i>
+                                Back to Items
+                            </a>
+                            
+                            <div class="flex space-x-3">
+                                <button class="btn btn-ghost border border-gray-200 px-4 py-2" id="save-draft-btn" onclick="window.location.href='dashboard.html'">
+                                    Save Draft
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- Invoice PDF Modal -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden" id="invoice-modal">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between p-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900">Invoice Preview</h3>
+                    <button class="text-gray-400 hover:text-gray-600 transition-colors" id="close-invoice-modal">
+                        <i class="w-6 h-6" data-lucide="x"></i>
+                    </button>
+                </div>
+                
+                <!-- PDF Content -->
+                <div class="p-8 overflow-y-auto max-h-[calc(90vh-120px)]">
+                    <div class="bg-white max-w-3xl mx-auto" style="font-family: Arial, sans-serif;">
+                        <!-- Header -->
+                        <div class="flex justify-between items-start mb-8">
+                            <div>
+                                <img src="https://files.slack.com/files-pri/T08EJAN88D9-F095TD39PBL/logo.png?pub_secret=82ec6f56ad" 
+                                     alt="Comfort Care Medical Logo" 
+                                     class="w-32 h-32 object-contain"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                <!-- Fallback SVG if image fails to load -->
+                                <div class="text-primary w-32 h-32 flex items-center justify-center" style="display: none;">
+                                    <svg width="120" height="120" viewBox="0 0 60 60" fill="currentColor">
+                                        <path d="M30 5C16.2 5 5 16.2 5 30s11.2 25 25 25 25-11.2 25-25S43.8 5 30 5zm0 45c-11 0-20-9-20-20s9-20 20-20 20 9 20 20-9 20-20 20z"/>
+                                        <path d="M30 15c-8.3 0-15 6.7-15 15s6.7 15 15 15 15-6.7 15-15-6.7-15-15-15zm0 25c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm text-gray-600">Questions? Email</p>
+                                <p class="text-sm text-primary" style="color: #8E4C77;">customerservice@comfortcaremd.com</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Invoice Header -->
+                        <div class="mb-6">
+                            <div class="bg-primary text-white p-3 inline-block" style="background-color: #8E4C77;">
+                                <div class="flex space-x-8">
+                                    <div>
+                                        <div class="font-bold">INVOICE #</div>
+                                        <div class="font-bold">AMOUNT</div>
+                                    </div>
+                                    <div>
+                                        <div>891011</div>
+                                        <div>$15.00</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Patient Information -->
+                        <div class="mb-6">
+                            <div class="grid grid-cols-2 gap-8">
+                                <div>
+                                    <div class="space-y-2">
+                                        <div class="flex justify-between">
+                                            <span class="font-bold">PATIENT NAME</span>
+                                            <span>Maria Rodriguez</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="font-bold">ACCOUNT #</span>
+                                            <span>12345</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="font-bold">INSURANCE</span>
+                                            <span>Blue Cross</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="font-bold">DEDUCTIBLE</span>
+                                            <span>$5,000.00</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="font-bold">MET TO DATE</span>
+                                            <span>$1,000.00</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="font-bold">DELIVERY TO:</span>
+                                            <span>PT ADDRESS</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Patient Responsibility -->
+                        <div class="mb-6">
+                            <div class="bg-primary text-white p-3 text-center font-bold" style="background-color: #8E4C77;">
+                                PT RESPONSIBILITY
+                            </div>
+                            <div class="border-l-2 border-r-2 border-gray-300 p-4">
+                                <div class="space-y-2">
+                                    <div class="flex justify-between">
+                                        <span class="font-bold">DEDUCTIBLE APPLIED</span>
+                                        <span>$0.00</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="font-bold">COINSURANCE DUE</span>
+                                        <span>$0.00</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="font-bold">SELF PAY DUE</span>
+                                        <span>$0.00</span>
+                                    </div>
+                                    <div class="border-t-2 border-black pt-2 mt-4">
+                                        <div class="flex justify-between font-bold text-lg">
+                                            <span>AMOUNT DUE</span>
+                                            <span>$121.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Order Summary -->
+                        <div class="mb-6">
+                            <div class="bg-primary text-white p-3 text-center font-bold" style="background-color: #8E4C77;">
+                                ORDER SUMMARY
+                            </div>
+                            <div class="border-2 border-gray-300">
+                                <div class="bg-gray-100 p-2">
+                                    <div class="grid grid-cols-3 gap-4 font-bold">
+                                        <div>QTY</div>
+                                        <div>L / R</div>
+                                        <div>ITEM DESCRIPTION</div>
+                                    </div>
+                                </div>
+                                <div class="p-4">
+                                    <div class="grid grid-cols-3 gap-4 mb-4">
+                                        <div>2</div>
+                                        <div>RT, LT</div>
+                                        <div>MASTECTOMY BRA</div>
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-4">
+                                        <div>1</div>
+                                        <div>LT</div>
+                                        <div>BREAST PROSTHESIS</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Modal Footer -->
+                <div class="flex justify-end space-x-3 p-4 pb-6 border-t border-gray-200">
+                    <button class="btn btn-ghost border border-gray-200 px-4 py-2 flex items-center" id="download-invoice-btn">
+                        <i class="w-4 h-4 mr-2" data-lucide="download"></i>Download PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sales Order PDF Modal -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden" id="sales-order-modal">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between p-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900">Sales Order Preview</h3>
+                    <button class="text-gray-400 hover:text-gray-600 transition-colors" id="close-sales-order-modal">
+                        <i class="w-6 h-6" data-lucide="x"></i>
+                    </button>
+                </div>
+                
+                <!-- PDF Content -->
+                <div class="p-8 overflow-y-auto max-h-[calc(90vh-120px)]">
+                    <div class="bg-white max-w-3xl mx-auto" style="font-family: Arial, sans-serif;">
+                        <!-- Header -->
+                        <div class="flex justify-between items-start mb-8">
+                            <div>
+                                <img src="https://files.slack.com/files-pri/T08EJAN88D9-F095TD39PBL/logo.png?pub_secret=82ec6f56ad" 
+                                     alt="Comfort Care Medical Logo" 
+                                     class="w-32 h-32 object-contain"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                <!-- Fallback SVG if image fails to load -->
+                                <div class="text-primary w-32 h-32 flex items-center justify-center" style="display: none;">
+                                    <svg width="120" height="120" viewBox="0 0 60 60" fill="currentColor">
+                                        <path d="M30 5C16.2 5 5 16.2 5 30s11.2 25 25 25 25-11.2 25-25S43.8 5 30 5zm0 45c-11 0-20-9-20-20s9-20 20-20 20 9 20 20-9 20-20 20z"/>
+                                        <path d="M30 15c-8.3 0-15 6.7-15 15s6.7 15 15 15 15-6.7 15-15-6.7-15-15-15zm0 25c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm text-gray-600">Questions? Email</p>
+                                <p class="text-sm text-primary" style="color: #8E4C77;">customerservice@comfortcaremd.com</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Sales Order Header -->
+                        <div class="mb-6">
+                            <div class="bg-primary text-white p-3 inline-block" style="background-color: #8E4C77;">
+                                <div class="flex space-x-8">
+                                    <div>
+                                        <div class="font-bold">SALES ORDER #</div>
+                                        <div class="font-bold">ORDER DATE</div>
+                                    </div>
+                                    <div>
+                                        <div>SO-2023-1459</div>
+                                        <div>November 15, 2023</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Vendor Information -->
+                        <div class="mb-6">
+                            <div class="grid grid-cols-2 gap-8">
+                                <div>
+                                    <h3 class="font-bold text-lg mb-3">SHIP TO:</h3>
+                                    <div class="space-y-1">
+                                        <div>Maria Rodriguez</div>
+                                        <div>123 Main Street</div>
+                                        <div>Los Angeles, CA 90210</div>
+                                        <div>Phone: (555) 123-4567</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-lg mb-3">VENDOR:</h3>
+                                    <div class="space-y-1">
+                                        <div>Juzo Medical</div>
+                                        <div>456 Vendor Lane</div>
+                                        <div>Charlotte, NC 28202</div>
+                                        <div>Phone: (800) 222-4999</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Order Details -->
+                        <div class="mb-6">
+                            <div class="bg-primary text-white p-3 text-center font-bold" style="background-color: #8E4C77;">
+                                ORDER DETAILS
+                            </div>
+                            <div class="border-2 border-gray-300">
+                                <div class="bg-gray-100 p-3">
+                                    <div class="grid grid-cols-6 gap-4 font-bold text-sm">
+                                        <div>QTY</div>
+                                        <div>ITEM CODE</div>
+                                        <div>DESCRIPTION</div>
+                                        <div>SIZE</div>
+                                        <div>L/R</div>
+                                        <div>UNIT PRICE</div>
+                                    </div>
+                                </div>
+                                <div class="p-4 space-y-3">
+                                    <div class="grid grid-cols-6 gap-4 text-sm">
+                                        <div>2</div>
+                                        <div>L8000</div>
+                                        <div>Mastectomy Bra</div>
+                                        <div>36C</div>
+                                        <div>-</div>
+                                        <div>$65.00</div>
+                                    </div>
+                                    <div class="grid grid-cols-6 gap-4 text-sm">
+                                        <div>1</div>
+                                        <div>L8030</div>
+                                        <div>Breast Prosthesis</div>
+                                        <div>Size 6</div>
+                                        <div>LT</div>
+                                        <div>$450.00</div>
+                                    </div>
+                                    <div class="grid grid-cols-6 gap-4 text-sm">
+                                        <div>1</div>
+                                        <div>A4452</div>
+                                        <div>Adhesive Strips</div>
+                                        <div>-</div>
+                                        <div>-</div>
+                                        <div>$25.00</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Special Instructions -->
+                        <div class="mb-6">
+                            <div class="bg-primary text-white p-3 font-bold" style="background-color: #8E4C77;">
+                                SPECIAL INSTRUCTIONS
+                            </div>
+                            <div class="border-2 border-gray-300 p-4">
+                                <p class="text-sm">Please ensure all items are properly fitted and include fitting instructions. Patient requires left-side prosthesis. Rush delivery requested - patient has upcoming appointment.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Order Summary -->
+                        <div class="text-right">
+                            <div class="inline-block">
+                                <div class="space-y-2">
+                                    <div class="flex justify-between w-64">
+                                        <span class="font-bold">SUBTOTAL:</span>
+                                        <span>$605.00</span>
+                                    </div>
+                                    <div class="flex justify-between w-64">
+                                        <span class="font-bold">SHIPPING:</span>
+                                        <span>$0.00</span>
+                                    </div>
+                                    <div class="border-t-2 border-black pt-2">
+                                        <div class="flex justify-between w-64 font-bold text-lg">
+                                            <span>TOTAL:</span>
+                                            <span>$605.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Modal Footer -->
+                <div class="flex justify-end space-x-3 p-4 pb-6 border-t border-gray-200">
+                    <button class="btn btn-ghost border border-gray-200 px-4 py-2 flex items-center" id="download-sales-order-btn">
+                        <i class="w-4 h-4 mr-2" data-lucide="download"></i>Download PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Proof of Delivery PDF Modal -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden" id="proof-delivery-modal">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between p-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900">Proof of Delivery Preview</h3>
+                    <button class="text-gray-400 hover:text-gray-600 transition-colors" id="close-proof-delivery-modal">
+                        <i class="w-6 h-6" data-lucide="x"></i>
+                    </button>
+                </div>
+                
+                <!-- PDF Content -->
+                <div class="p-8 overflow-y-auto max-h-[calc(90vh-120px)]">
+                    <div class="bg-white max-w-3xl mx-auto" style="font-family: Arial, sans-serif;">
+                        <!-- Header -->
+                        <div class="flex justify-between items-start mb-8">
+                            <div>
+                                <img src="https://files.slack.com/files-pri/T08EJAN88D9-F095TD39PBL/logo.png?pub_secret=82ec6f56ad" 
+                                     alt="Comfort Care Medical Logo" 
+                                     class="w-32 h-32 object-contain"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                <!-- Fallback SVG if image fails to load -->
+                                <div class="text-primary w-32 h-32 flex items-center justify-center" style="display: none;">
+                                    <svg width="120" height="120" viewBox="0 0 60 60" fill="currentColor">
+                                        <path d="M30 5C16.2 5 5 16.2 5 30s11.2 25 25 25 25-11.2 25-25S43.8 5 30 5zm0 45c-11 0-20-9-20-20s9-20 20-20 20 9 20 20-9 20-20 20z"/>
+                                        <path d="M30 15c-8.3 0-15 6.7-15 15s6.7 15 15 15 15-6.7 15-15-6.7-15-15-15zm0 25c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm text-gray-600">Questions? Email</p>
+                                <p class="text-sm text-primary" style="color: #8E4C77;">customerservice@comfortcaremd.com</p>
+                            </div>
+                        </div>
+                        
+                        <!-- POD Header -->
+                        <div class="mb-6">
+                            <div class="bg-primary text-white p-3 text-center font-bold" style="background-color: #8E4C77;">
+                                PROOF OF DELIVERY (POD) RECEIPT
+                            </div>
+                        </div>
+                        
+                        <!-- Patient Information -->
+                        <div class="mb-6">
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="font-bold">PATIENT NAME</span>
+                                    <span>Maria Rodriguez</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="font-bold">ACCOUNT NO</span>
+                                    <span>12345</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="font-bold">SALES ORDER NO</span>
+                                    <span>891011</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="font-bold">DELIVERY ADDRESS</span>
+                                    <span>123 Main Street, Los Angeles, CA 90210</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Delivery Confirmation Text -->
+                        <div class="mb-8">
+                            <p class="text-sm leading-relaxed">
+                                The signature below confirms that the patient has received the item(s) listed. The patient has been 
+                                instructed on the use, wear and warranty of the items listed below. Comfort Care Medical is authorized to 
+                                bill the patient's medical insurance for services rendered and the insurance is authorized by the patient to 
+                                release payment. Comfort Care Medical has provided the patient with a Notice of Privacy Practices.
+                            </p>
+                        </div>
+                        
+                        <!-- Signature Section -->
+                        <div class="mb-8">
+                            <div class="flex justify-between items-center">
+                                <div class="flex-1">
+                                    <div class="flex items-center">
+                                        <span class="font-bold mr-4">PATIENT SIGNATURE:</span>
+                                        <div class="flex-1 border-b-2 border-black h-8"></div>
+                                    </div>
+                                </div>
+                                <div class="ml-8">
+                                    <div class="flex items-center">
+                                        <span class="font-bold mr-4">DATE</span>
+                                        <div class="w-24 border-b-2 border-black h-8"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Therapist Section -->
+                        <div class="mb-6">
+                            <div class="bg-primary text-white p-3 text-center font-bold" style="background-color: #8E4C77;">
+                                IF ORDER IS BEING FIT BY THERAPIST:
+                            </div>
+                            <div class="border-2 border-gray-300 p-4">
+                                <div class="grid grid-cols-2 gap-8 mb-4">
+                                    <div>
+                                        <span class="font-bold">THERAPIST NAME:</span>
+                                        <div class="border-b border-black mt-1 h-6"></div>
+                                    </div>
+                                    <div>
+                                        <span class="font-bold">CLINIC/FACILITY:</span>
+                                        <div class="border-b border-black mt-1 h-6"></div>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div class="flex-1">
+                                        <div class="flex items-center">
+                                            <span class="font-bold mr-4">THERAPIST SIGNATURE:</span>
+                                            <div class="flex-1 border-b-2 border-black h-8"></div>
+                                        </div>
+                                    </div>
+                                    <div class="ml-8">
+                                        <div class="flex items-center">
+                                            <span class="font-bold mr-4">DATE:</span>
+                                            <div class="w-24 border-b-2 border-black h-8"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Order Summary -->
+                        <div class="mb-6">
+                            <div class="bg-primary text-white p-3 font-bold" style="background-color: #8E4C77;">
+                                ORDER SUMMARY
+                            </div>
+                            <div class="border-2 border-gray-300">
+                                <div class="bg-gray-100 p-3">
+                                    <div class="grid grid-cols-3 gap-4 font-bold text-sm">
+                                        <div>QTY</div>
+                                        <div>ITEM DESCRIPTION</div>
+                                        <div>L / R</div>
+                                    </div>
+                                </div>
+                                <div class="p-4 space-y-3">
+                                    <div class="grid grid-cols-3 gap-4 text-sm">
+                                        <div>2</div>
+                                        <div>MASTECTOMY BRA</div>
+                                        <div>RT, LT</div>
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-4 text-sm">
+                                        <div>1</div>
+                                        <div>BREAST PROSTHESIS</div>
+                                        <div>LT</div>
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-4 text-sm">
+                                        <div>1</div>
+                                        <div>ADHESIVE STRIPS</div>
+                                        <div>-</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Modal Footer -->
+                <div class="flex justify-end space-x-3 p-4 pb-6 border-t border-gray-200">
+                    <button class="btn btn-ghost border border-gray-200 px-4 py-2 flex items-center" id="download-proof-delivery-btn">
+                        <i class="w-4 h-4 mr-2" data-lucide="download"></i>Download PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+            
+            // Invoice modal functionality
+            const invoiceModal = document.getElementById('invoice-modal');
+            const viewInvoiceBtn = document.getElementById('view-invoice-btn');
+            const closeInvoiceModal = document.getElementById('close-invoice-modal');
+            
+            // Open invoice modal
+            viewInvoiceBtn.addEventListener('click', () => {
+                invoiceModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+            
+            // Close invoice modal
+            function closeModal() {
+                invoiceModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+            
+            closeInvoiceModal.addEventListener('click', closeModal);
+            
+            // Close modal when clicking outside
+            invoiceModal.addEventListener('click', (e) => {
+                if (e.target === invoiceModal) {
+                    closeModal();
+                }
+            });
+            
+            // Close modal with Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !invoiceModal.classList.contains('hidden')) {
+                    closeModal();
+                }
+                if (e.key === 'Escape' && !salesOrderModal.classList.contains('hidden')) {
+                    closeSalesOrderModal();
+                }
+                if (e.key === 'Escape' && !proofDeliveryModal.classList.contains('hidden')) {
+                    closeProofDeliveryModal();
+                }
+            });
+            
+            // Sales Order modal functionality
+            const salesOrderModal = document.getElementById('sales-order-modal');
+            const viewSalesOrderBtn = document.getElementById('view-sales-order-btn');
+            const closeSalesOrderModalElement = document.getElementById('close-sales-order-modal');
+            
+            // Open sales order modal
+            viewSalesOrderBtn.addEventListener('click', () => {
+                salesOrderModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+            
+            // Close sales order modal
+            function closeSalesOrderModal() {
+                salesOrderModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+            
+            closeSalesOrderModalElement.addEventListener('click', closeSalesOrderModal);
+            
+            // Close modal when clicking outside
+            salesOrderModal.addEventListener('click', (e) => {
+                if (e.target === salesOrderModal) {
+                    closeSalesOrderModal();
+                }
+            });
+            
+            // Proof of Delivery modal functionality
+            const proofDeliveryModal = document.getElementById('proof-delivery-modal');
+            const viewProofDeliveryBtn = document.getElementById('view-proof-delivery-btn');
+            const closeProofDeliveryModalElement = document.getElementById('close-proof-delivery-modal');
+            
+            // Open proof of delivery modal
+            viewProofDeliveryBtn.addEventListener('click', () => {
+                proofDeliveryModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+            
+            // Close proof of delivery modal
+            function closeProofDeliveryModal() {
+                proofDeliveryModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+            
+            closeProofDeliveryModalElement.addEventListener('click', closeProofDeliveryModal);
+            
+            // Close modal when clicking outside
+            proofDeliveryModal.addEventListener('click', (e) => {
+                if (e.target === proofDeliveryModal) {
+                    closeProofDeliveryModal();
+                }
+            });
+            
+            // Notification button click handler
+            const notificationsButton = document.getElementById('notifications-button');
+            notificationsButton.addEventListener('click', () => {
+                // Navigate to approval management screen
+                window.location.href = '/approval-management.html';
+            });
+            
+            // Profile dropdown toggle
+            const profileButton = document.getElementById('profile-button');
+            const profileDropdown = document.getElementById('profile-dropdown');
+            
+            profileButton.addEventListener('click', () => {
+                profileDropdown.classList.toggle('hidden');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (event) => {
+                if (!profileButton.contains(event.target) && !profileDropdown.contains(event.target)) {
+                    profileDropdown.classList.add('hidden');
+                }
+            });
+            
+            // Document tab switching - Desktop
+            const desktopTabs = document.querySelectorAll('.desktop-tabs .document-tab');
+            const mobileTabs = document.querySelectorAll('.mobile-tabs .document-tab');
+            const documentPreviews = [
+                document.getElementById('invoice-consent'),
+                document.getElementById('sales-order'),
+                document.getElementById('proof-of-delivery')
+            ];
+            
+            function switchTab(index) {
+                // Update desktop tabs
+                desktopTabs.forEach((tab, i) => {
+                    tab.classList.toggle('active', i === index);
+                });
+                
+                // Update mobile tabs
+                mobileTabs.forEach((tab, i) => {
+                    tab.classList.toggle('active', i === index);
+                });
+                
+                // Show/hide document previews
+                documentPreviews.forEach((preview, i) => {
+                    preview.classList.toggle('hidden', i !== index);
+                });
+            }
+            
+            // Add event listeners to desktop tabs
+            desktopTabs.forEach((tab, index) => {
+                tab.addEventListener('click', function() {
+                    switchTab(index);
+                });
+            });
+            
+            // Add event listeners to mobile tabs
+            mobileTabs.forEach((tab, index) => {
+                tab.addEventListener('click', function() {
+                    switchTab(index);
+                });
+            });
+            
+            // Workflow state management
+            let currentStep = 0; // 0 = waiting for approval, 1 = patient invoice, 2 = sales order, 3 = proof of delivery
+            let approvalRequired = true; // This would be determined by checking HCPCS codes
+            
+            // Request approval button
+            const requestApprovalBtn = document.getElementById('request-approval-btn');
+            requestApprovalBtn.addEventListener('click', function() {
+                // Hide approval required banner
+                document.getElementById('approval-status-banner').classList.add('hidden');
+                
+                // Show pending approval banner
+                document.getElementById('pending-approval-banner').classList.remove('hidden');
+            });
+            
+            // Function to activate a card
+            function activateCard(cardId, stepNumber) {
+                const card = document.getElementById(cardId);
+                const stepIndicatorIds = {
+                    'invoice-card': 'invoice-step-indicator',
+                    'sales-order-card': 'sales-order-step-indicator',
+                    'proof-delivery-card': 'proof-delivery-step-indicator'
+                };
+                const stepIndicator = document.getElementById(stepIndicatorIds[cardId]);
+                const statusBadge = card.querySelector('[id$="-status"]');
+                const sendBtn = card.querySelector('[id^="send-"]');
+                const markBtn = card.querySelector('[id^="mark-"]');
+                
+                // Remove opacity and enable interactions
+                card.classList.remove('opacity-50');
+                card.classList.add('border-primary');
+                
+                // Update step indicator
+                stepIndicator.style.backgroundColor = 'var(--primary)';
+                
+                // Update status
+                statusBadge.textContent = 'Ready';
+                statusBadge.classList.remove('bg-gray-100', 'text-gray-600');
+                statusBadge.classList.add('bg-blue-100', 'text-blue-700');
+                
+                // Enable send button
+                sendBtn.disabled = false;
+                sendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+            
+            // Function to complete a card
+            function completeCard(cardId, stepNumber) {
+                const card = document.getElementById(cardId);
+                const stepIndicatorIds = {
+                    'invoice-card': 'invoice-step-indicator',
+                    'sales-order-card': 'sales-order-step-indicator',
+                    'proof-delivery-card': 'proof-delivery-step-indicator'
+                };
+                const stepIndicator = document.getElementById(stepIndicatorIds[cardId]);
+                const statusBadge = card.querySelector('[id$="-status"]');
+                const sendBtn = card.querySelector('[id^="send-"]');
+                const markBtn = card.querySelector('[id^="mark-"]');
+                
+                // Update step indicator to show completion
+                stepIndicator.style.backgroundColor = '#10b981'; // green
+                stepIndicator.innerHTML = '<i data-lucide="check" class="w-3 h-3"></i>';
+                
+                // Update status
+                statusBadge.textContent = 'Complete';
+                statusBadge.classList.remove('bg-blue-100', 'text-blue-700');
+                statusBadge.classList.add('bg-green-100', 'text-black');
+                
+                // Disable all buttons
+                sendBtn.disabled = true;
+                sendBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                markBtn.disabled = true;
+                markBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                
+                // Activate next card
+                if (stepNumber < 3) {
+                    const nextCards = ['invoice-card', 'sales-order-card', 'proof-delivery-card'];
+                    activateCard(nextCards[stepNumber], stepNumber + 1);
+                }
+                
+                // Re-initialize icons
+                lucide.createIcons();
+            }
+            
+            // Invoice workflow handlers
+            document.getElementById('send-invoice-btn').addEventListener('click', function() {
+                // Simulate sending invoice
+                alert('Invoice + Consent Form sent to patient');
+                
+                // Show and enable mark complete button
+                const markBtn = document.getElementById('mark-invoice-complete-btn');
+                markBtn.classList.remove('hidden');
+                markBtn.disabled = false;
+                markBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                
+                // Update status
+                document.getElementById('invoice-status').textContent = 'Sent to patient';
+                document.getElementById('invoice-status').classList.remove('bg-blue-100', 'text-blue-700');
+                document.getElementById('invoice-status').classList.add('bg-yellow-100', 'text-yellow-700');
+            });
+            
+            document.getElementById('mark-invoice-complete-btn').addEventListener('click', function() {
+                completeCard('invoice-card', 1);
+            });
+            
+            // Sales Order workflow handlers
+            document.getElementById('send-sales-order-btn').addEventListener('click', function() {
+                // Create mailto link with sales order details
+                const vendorEmail = 'orders@juzomedical.com';
+                const subject = 'Sales Order SO-2023-1459 - Comfort Care Medical';
+                const body = `Dear Juzo Medical Team,
+
+Please find the sales order details below:
+
+SALES ORDER #: SO-2023-1459
+ORDER DATE: November 15, 2023
+PATIENT: Maria Rodriguez
+
+SHIP TO:
+Maria Rodriguez
+123 Main Street
+Los Angeles, CA 90210
+Phone: (555) 123-4567
+
+ORDER DETAILS:
+- Qty: 2 | Item: L8000 - Mastectomy Bra | Size: 36C | Unit Price: $65.00
+- Qty: 1 | Item: L8030 - Breast Prosthesis | Size: Size 6 | L/R: LT | Unit Price: $450.00
+- Qty: 1 | Item: A4452 - Adhesive Strips | Unit Price: $25.00
+
+SPECIAL INSTRUCTIONS:
+Please ensure all items are properly fitted and include fitting instructions. Patient requires left-side prosthesis. Rush delivery requested - patient has upcoming appointment.
+
+TOTAL: $605.00
+
+Please confirm receipt of this order and provide estimated delivery date.
+
+Best regards,
+Comfort Care Medical Team
+customerservice@comfortcaremd.com`;
+
+                const mailtoLink = `mailto:${vendorEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                
+                // Open email client
+                window.location.href = mailtoLink;
+                
+                // Show and enable mark complete button
+                const markBtn = document.getElementById('mark-sales-order-complete-btn');
+                markBtn.classList.remove('hidden');
+                markBtn.disabled = false;
+                markBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                
+                // Update status
+                document.getElementById('sales-order-status').textContent = 'Sent to vendor';
+                document.getElementById('sales-order-status').classList.remove('bg-blue-100', 'text-blue-700');
+                document.getElementById('sales-order-status').classList.add('bg-yellow-100', 'text-yellow-700');
+            });
+            
+            document.getElementById('mark-sales-order-complete-btn').addEventListener('click', function() {
+                completeCard('sales-order-card', 2);
+            });
+            
+            // Proof of Delivery workflow handlers
+            document.getElementById('send-proof-delivery-btn').addEventListener('click', function() {
+                // Simulate sending proof of delivery
+                alert('Proof of Delivery sent to patient');
+                
+                // Show and enable mark complete button
+                const markBtn = document.getElementById('mark-proof-delivery-complete-btn');
+                markBtn.classList.remove('hidden');
+                markBtn.disabled = false;
+                markBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                
+                // Update status
+                document.getElementById('proof-delivery-status').textContent = 'Sent to patient';
+                document.getElementById('proof-delivery-status').classList.remove('bg-blue-100', 'text-blue-700');
+                document.getElementById('proof-delivery-status').classList.add('bg-yellow-100', 'text-yellow-700');
+            });
+            
+            document.getElementById('mark-proof-delivery-complete-btn').addEventListener('click', function() {
+                completeCard('proof-delivery-card', 3);
+                alert('Order workflow completed!');
+            });
+            
+            // For demo purposes: Add a button to simulate approval
+            const simulateApprovalBtn = document.createElement('button');
+            simulateApprovalBtn.className = 'fixed bottom-24 right-4 bg-green-500 text-white rounded-full p-2 z-30 shadow-lg';
+            simulateApprovalBtn.innerHTML = '<i data-lucide="check" class="w-5 h-5"></i>';
+            simulateApprovalBtn.title = 'Simulate Approval (Demo Only)';
+            document.body.appendChild(simulateApprovalBtn);
+            
+            simulateApprovalBtn.addEventListener('click', function() {
+                // Hide all other banners first
+                document.getElementById('approval-status-banner').classList.add('hidden');
+                document.getElementById('pending-approval-banner').classList.add('hidden');
+                
+                // Show approved banner
+                document.getElementById('approved-banner').classList.remove('hidden');
+                
+                // Activate first card (invoice)
+                activateCard('invoice-card', 1);
+                currentStep = 1;
+                
+                // Re-initialize icons
+                lucide.createIcons();
+            });
+            
+            // Initialize the demo button icon
+            lucide.createIcons({
+                icons: {
+                    'check': simulateApprovalBtn.querySelector('i')
+                }
+            });
+        });
+    </script>
+
+</body></html>
+                

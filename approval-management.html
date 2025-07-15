@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Comfort Care - Approval Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>// Tailwind CSS configuration file
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            colors: {
+                primary: "hsl(from var(--primary) h s l)", // main color for buttons, links, etc
+                secondary: "hsl(from var(--secondary) h s l)", // secondary color for buttons, links, etc
+                accent: "hsl(from var(--accent) h s l)", // accent color
+                background: "hsl(from var(--background) h s l)", // body background color
+                foreground: "hsl(from var(--text) h s l)", // text color
+            },
+            fontFamily: {
+                header: ["var(--font-header)", "sans-serif"],
+                body: ["var(--font-body)", "sans-serif"],
+            },
+            borderRadius: {
+                default: 'var(--border-radius)',
+            },
+        },
+    },
+};</script>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans&display=swap');
+
+:root {
+    --text: #4A4A4A;
+    --accent: hsl(from var(--primary) calc(h + 60) calc(s - 10%) calc(l + 20%));
+    --primary: #8E4C77;
+    --font-body: Instrument Sans;
+    --secondary: #5B8C9F;
+    --background: #F7F7F9;
+    --font-header: Instrument Sans;
+    --border-radius: 8px;
+}
+
+.rounded-default {
+    border-radius: var(--border-radius);
+}
+
+.rounded-lg {
+    border-radius: calc(var(--border-radius) + 4px);
+}
+
+.rounded-md {
+    border-radius: calc(var(--border-radius) + 2px);
+}
+
+.rounded-sm {
+    border-radius: calc(var(--border-radius) - 2px);
+}
+</style>
+    <style>body {
+    color: var(--text);
+    font-family: var(--font-body);
+    background-color: var(--background);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text);
+    font-family: var(--font-header);
+}
+
+a {
+    color: var(--secondary);
+}
+
+a:hover {
+    color: hsl(from var(--secondary) h s calc(l * 0.8));
+}
+
+.btn {
+    font-weight: 600;
+    border-radius: var(--border-radius);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn:focus-visible {
+    outline-color: hsl(from var(--secondary) h s l);
+}
+
+.btn-primary {
+    color: #ffffff;
+    background-color: var(--primary);
+}
+
+.btn-primary:hover:not(:disabled) {
+    color: #ffffff;
+    background-color: hsl(from var(--primary) h s calc(l * 0.9));
+}
+
+.btn-secondary {
+    color: #ffffff;
+    border-radius: 9999px;
+    background-color: var(--secondary);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    color: #ffffff;
+    background-color: hsl(from var(--secondary) h s calc(l * 0.8));
+}
+
+.btn-ghost {
+    color: var(--text);
+    background-color: transparent;
+}
+
+.btn-ghost:hover:not(:disabled) {
+    background-color: hsl(from var(--text) h s l / 0.05);
+}
+
+.btn-danger {
+    color: #dc2626;
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+}
+
+.btn-danger:hover:not(:disabled) {
+    background-color: #fee2e2;
+    border-color: #fca5a5;
+}
+
+.card {
+    border: 1px solid hsl(from var(--text) h s l / 0.1);
+    border-radius: calc(var(--border-radius) * 2);
+    background-color: #ffffff;
+}
+
+.form-control {
+    border: 1px solid hsl(from var(--text) h s l / 0.1);
+    border-radius: var(--border-radius);
+    background-color: #ffffff;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 3px hsl(from var(--secondary) h s l / 0.25);
+    border-color: var(--secondary);
+}
+
+.navbar {
+    background-color: #ffffff;
+}
+
+.nav-link {
+    color: var(--text);
+}
+
+.nav-link:hover {
+    color: var(--secondary);
+}
+
+.alert-success {
+    color: hsl(from var(--primary) h s 20%);
+    border-color: hsl(from var(--primary) h s 85%);
+    background-color: hsl(from var(--primary) h s 92%);
+}
+
+.alert-error {
+    color: hsl(from var(--primary) calc(h - 88) s 25%);
+    border-color: hsl(from var(--primary) calc(h - 88) s 85%);
+    background-color: hsl(from var(--primary) calc(h - 88) s 92%);
+}
+
+.alert-info {
+    color: hsl(from var(--secondary) h s 20%);
+    border-color: hsl(from var(--secondary) h s 85%);
+    background-color: hsl(from var(--secondary) h s 92%);
+}</style>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        .order-card {
+            border: 1px solid #e5e7eb;
+            border-radius: var(--border-radius);
+            background-color: white;
+            transition: all 0.2s ease;
+        }
+        
+        .order-card:hover {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .order-details {
+            display: none;
+            border-top: 1px solid #f3f4f6;
+            margin-top: 1rem;
+            padding-top: 1rem;
+        }
+        
+        .order-details.expanded {
+            display: block;
+        }
+        
+        .expand-btn {
+            transition: transform 0.2s ease;
+        }
+        
+        .expand-btn.expanded {
+            transform: rotate(180deg);
+        }
+        
+        .cost-summary {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cost-item {
+            text-align: left;
+        }
+        
+        .cost-item .label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-bottom: 0.125rem;
+        }
+        
+        .cost-item .value {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .approval-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+        
+        .par-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #92400e;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .cost-summary {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .approval-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-background font-body">
+    <!-- Header -->
+    <header class="bg-white shadow-sm py-4 px-6 sticky top-0 z-20">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div class="bg-primary p-1.5 rounded">
+                    <i class="text-white w-5 h-5" data-lucide="heart"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold mb-0">Approval Management</h1>
+                    <p class="text-sm text-gray-500">Review and approve pending orders</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <button class="p-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors" id="notifications-button">
+                        <i class="w-6 h-6" data-lucide="bell"></i>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">2</span>
+                    </button>
+                </div>
+                
+                <div class="relative">
+                    <button class="p-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors" id="profile-button">
+                        <i class="w-6 h-6" data-lucide="user"></i>
+                        <span class="sr-only">User Profile</span>
+                    </button>
+                    
+                    <div class="absolute top-full right-0 mt-2 w-48 bg-white rounded-md shadow-lg p-2 hidden" id="profile-dropdown">
+                        <div class="p-2 text-sm">
+                            <p class="font-medium">Amy Miller</p>
+                            <p class="text-gray-500 text-xs">amy.miller@comfortcare.example</p>
+                        </div>
+                        <div class="border-t border-gray-100 my-1"></div>
+                        <a class="flex items-center gap-2 p-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md" href="/login.html">
+                            <i class="w-4 h-4" data-lucide="log-out"></i>
+                            <span>Sign out</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <div class="p-6">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-xl font-semibold mb-1">Orders Requiring Approval</h2>
+                        <p class="text-sm text-gray-600">2 orders need prior authorization review</p>
+                    </div>
+                </div>
+                
+                <!-- Orders List -->
+                <div class="space-y-4">
+                    <!-- Order Card 1 -->
+                    <div class="order-card p-4" id="order-1">
+                        <!-- Main Order Info -->
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <h3 class="font-semibold text-lg">Maria Rodriguez</h3>
+                                    <span class="text-xs text-gray-500">2 hours ago</span>
+                                </div>
+                                <div class="flex items-center gap-4 text-sm text-gray-600 mb-2">
+                                    <span>SO-2023-1459</span>
+                                    <span>PT-78945</span>
+                                    <span>Blue Cross</span>
+                                </div>
+                                <div class="par-info">
+                                    <i class="w-4 h-4" data-lucide="alert-circle"></i>
+                                    <span>PAR Required: Breast Prosthesis (L8030)</span>
+                                </div>
+                            </div>
+                            <button class="expand-btn p-2 text-gray-400 hover:text-gray-600 transition-colors" data-order="order-1">
+                                <i class="w-5 h-5" data-lucide="chevron-down"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Simple Cost Summary -->
+                        <div class="cost-summary">
+                            <div class="cost-item">
+                                <div class="label">Total</div>
+                                <div class="value">$605.00</div>
+                            </div>
+                            <div class="cost-item">
+                                <div class="label">Insurance</div>
+                                <div class="value">$484.00</div>
+                            </div>
+                            <div class="cost-item">
+                                <div class="label">Patient</div>
+                                <div class="value">$121.00</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="approval-actions">
+                            <button class="btn btn-ghost text-sm px-3 py-2" onclick="toggleDetails('order-1')">
+                                <i class="w-4 h-4" data-lucide="eye"></i>
+                                Details
+                            </button>
+                            <button class="btn btn-danger text-sm px-3 py-2" onclick="rejectOrder('SO-2023-1459')">
+                                <i class="w-4 h-4" data-lucide="x"></i>
+                                Reject
+                            </button>
+                            <button class="btn btn-primary text-sm px-4 py-2" onclick="approveOrderDirect('SO-2023-1459')">
+                                <i class="w-4 h-4" data-lucide="check"></i>
+                                Approve
+                            </button>
+                        </div>
+                        
+                        <!-- Expandable Details -->
+                        <div class="order-details" id="order-1-details">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="font-medium mb-3">Patient Information</h4>
+                                    <div class="space-y-2 text-sm">
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">State:</span>
+                                            <span>California</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Deductible:</span>
+                                            <span>$1,500 ($750 met)</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">PAR Status:</span>
+                                            <span class="text-amber-600">Pending Review</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <h4 class="font-medium mb-3">Order Items</h4>
+                                    <div class="space-y-2">
+                                        <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                                            <div>
+                                                <p class="font-medium text-sm">Breast Prosthesis</p>
+                                                <p class="text-xs text-gray-600">L8030 • Affirm</p>
+                                            </div>
+                                            <p class="text-sm font-medium">$450.00</p>
+                                        </div>
+                                        <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                                            <div>
+                                                <p class="font-medium text-sm">Mastectomy Bra</p>
+                                                <p class="text-xs text-gray-600">L8000 • Affirm</p>
+                                            </div>
+                                            <p class="text-sm font-medium">$130.00</p>
+                                        </div>
+                                        <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                                            <div>
+                                                <p class="font-medium text-sm">Adhesive Strips</p>
+                                                <p class="text-xs text-gray-600">A4452 • Affirm</p>
+                                            </div>
+                                            <p class="text-sm font-medium">$25.00</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Documents Section -->
+                            <div class="mt-6">
+                                <h4 class="font-medium mb-3">Generated Documents</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                    <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                                        <div class="bg-blue-100 p-2 rounded mr-3">
+                                            <i class="w-4 h-4 text-blue-600" data-lucide="file-text"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="font-medium text-sm">Patient Invoice</p>
+                                            <p class="text-xs text-gray-500">PDF • 1.2 MB</p>
+                                        </div>
+                                        <button class="btn btn-ghost text-sm p-1">
+                                            <i class="w-4 h-4" data-lucide="eye"></i>
+                                        </button>
+                                    </div>
+                                    <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                                        <div class="bg-blue-100 p-2 rounded mr-3">
+                                            <i class="w-4 h-4 text-blue-600" data-lucide="shopping-cart"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="font-medium text-sm">Sales Order</p>
+                                            <p class="text-xs text-gray-500">PDF • 0.8 MB</p>
+                                        </div>
+                                        <button class="btn btn-ghost text-sm p-1">
+                                            <i class="w-4 h-4" data-lucide="eye"></i>
+                                        </button>
+                                    </div>
+                                    <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                                        <div class="bg-blue-100 p-2 rounded mr-3">
+                                            <i class="w-4 h-4 text-blue-600" data-lucide="truck"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="font-medium text-sm">Proof of Delivery</p>
+                                            <p class="text-xs text-gray-500">PDF • 0.5 MB</p>
+                                        </div>
+                                        <button class="btn btn-ghost text-sm p-1">
+                                            <i class="w-4 h-4" data-lucide="eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Order Card 2 -->
+                    <div class="order-card p-4" id="order-2">
+                        <!-- Main Order Info -->
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <h3 class="font-semibold text-lg">James Wilson</h3>
+                                    <span class="text-xs text-gray-500">5 hours ago</span>
+                                </div>
+                                <div class="flex items-center gap-4 text-sm text-gray-600 mb-2">
+                                    <span>SO-2023-1458</span>
+                                    <span>PT-78944</span>
+                                    <span>Medicare</span>
+                                </div>
+                                <div class="par-info">
+                                    <i class="w-4 h-4" data-lucide="alert-circle"></i>
+                                    <span>PAR Required: Lymphedema Pump (E0651)</span>
+                                </div>
+                            </div>
+                            <button class="expand-btn p-2 text-gray-400 hover:text-gray-600 transition-colors" data-order="order-2">
+                                <i class="w-5 h-5" data-lucide="chevron-down"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Simple Cost Summary -->
+                        <div class="cost-summary">
+                            <div class="cost-item">
+                                <div class="label">Total</div>
+                                <div class="value">$1,200.00</div>
+                            </div>
+                            <div class="cost-item">
+                                <div class="label">Insurance</div>
+                                <div class="value">$960.00</div>
+                            </div>
+                            <div class="cost-item">
+                                <div class="label">Patient</div>
+                                <div class="value">$240.00</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="approval-actions">
+                            <button class="btn btn-ghost text-sm px-3 py-2" onclick="toggleDetails('order-2')">
+                                <i class="w-4 h-4" data-lucide="eye"></i>
+                                Details
+                            </button>
+                            <button class="btn btn-danger text-sm px-3 py-2" onclick="rejectOrder('SO-2023-1458')">
+                                <i class="w-4 h-4" data-lucide="x"></i>
+                                Reject
+                            </button>
+                            <button class="btn btn-primary text-sm px-4 py-2" onclick="approveOrderDirect('SO-2023-1458')">
+                                <i class="w-4 h-4" data-lucide="check"></i>
+                                Approve
+                            </button>
+                        </div>
+                        
+                        <!-- Expandable Details -->
+                        <div class="order-details" id="order-2-details">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="font-medium mb-3">Patient Information</h4>
+                                    <div class="space-y-2 text-sm">
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">State:</span>
+                                            <span>Texas</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Deductible:</span>
+                                            <span>$2,000 ($1,200 met)</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">PAR Status:</span>
+                                            <span class="text-amber-600">Pending Review</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <h4 class="font-medium mb-3">Order Items</h4>
+                                    <div class="space-y-2">
+                                        <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                                            <div>
+                                                <p class="font-medium text-sm">Lymphedema Pump</p>
+                                                <p class="text-xs text-gray-600">E0651 • Medi</p>
+                                            </div>
+                                            <p class="text-sm font-medium">$1,200.00</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Documents Section -->
+                            <div class="mt-6">
+                                <h4 class="font-medium mb-3">Generated Documents</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                    <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                                        <div class="bg-blue-100 p-2 rounded mr-3">
+                                            <i class="w-4 h-4 text-blue-600" data-lucide="file-text"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="font-medium text-sm">Patient Invoice</p>
+                                            <p class="text-xs text-gray-500">PDF • 0.9 MB</p>
+                                        </div>
+                                        <button class="btn btn-ghost text-sm p-1">
+                                            <i class="w-4 h-4" data-lucide="eye"></i>
+                                        </button>
+                                    </div>
+                                    <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                                        <div class="bg-blue-100 p-2 rounded mr-3">
+                                            <i class="w-4 h-4 text-blue-600" data-lucide="shopping-cart"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="font-medium text-sm">Sales Order</p>
+                                            <p class="text-xs text-gray-500">PDF • 2.1 MB</p>
+                                        </div>
+                                        <button class="btn btn-ghost text-sm p-1">
+                                            <i class="w-4 h-4" data-lucide="eye"></i>
+                                        </button>
+                                    </div>
+                                    <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                                        <div class="bg-blue-100 p-2 rounded mr-3">
+                                            <i class="w-4 h-4 text-blue-600" data-lucide="truck"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="font-medium text-sm">Proof of Delivery</p>
+                                            <p class="text-xs text-gray-500">PDF • 1.1 MB</p>
+                                        </div>
+                                        <button class="btn btn-ghost text-sm p-1">
+                                            <i class="w-4 h-4" data-lucide="eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Back to Dashboard -->
+                <div class="mt-8 pt-6 border-t border-gray-200">
+                    <a class="btn btn-ghost border border-gray-200 px-4 py-2" href="/index.html">
+                        <i class="w-4 h-4" data-lucide="arrow-left"></i>
+                        Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Rejection Modal -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden" id="rejection-modal">
+        <div class="bg-white rounded-lg shadow-lg max-w-md w-full mx-4">
+            <div class="p-4 border-b border-gray-200">
+                <h3 class="font-semibold">Reject Order</h3>
+            </div>
+            <div class="p-4">
+                <p class="text-gray-600 mb-4">Please provide a reason for rejecting this order.</p>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="rejection-reason">Rejection Reason</label>
+                    <textarea class="form-control w-full" id="rejection-reason" placeholder="Enter reason for rejection..." rows="3"></textarea>
+                </div>
+                
+                <div class="flex justify-end space-x-3">
+                    <button class="btn btn-ghost border border-gray-200 px-4 py-2" id="cancel-rejection">
+                        Cancel
+                    </button>
+                    <button class="btn btn-danger px-4 py-2" id="confirm-rejection">
+                        <i class="w-4 h-4" data-lucide="x"></i>
+                        Confirm Rejection
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+            
+            // Profile dropdown toggle
+            const profileButton = document.getElementById('profile-button');
+            const profileDropdown = document.getElementById('profile-dropdown');
+            
+            profileButton.addEventListener('click', () => {
+                profileDropdown.classList.toggle('hidden');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (event) => {
+                if (!profileButton.contains(event.target) && !profileDropdown.contains(event.target)) {
+                    profileDropdown.classList.add('hidden');
+                }
+            });
+        });
+        
+        // Toggle order details
+        function toggleDetails(orderId) {
+            const details = document.getElementById(orderId + '-details');
+            const expandBtn = document.querySelector(`[data-order="${orderId}"]`);
+            const detailsBtn = document.querySelector(`[onclick="toggleDetails('${orderId}')"]`);
+            
+            if (details.classList.contains('expanded')) {
+                details.classList.remove('expanded');
+                expandBtn.classList.remove('expanded');
+                detailsBtn.classList.remove('expanded');
+            } else {
+                details.classList.add('expanded');
+                expandBtn.classList.add('expanded');
+                detailsBtn.classList.add('expanded');
+            }
+        }
+        
+        // Global variables for modal state
+        let currentOrderId = null;
+        
+        // Direct approve order function
+        function approveOrderDirect(orderId) {
+            // Find the order card by looking for the button that was clicked
+            const button = event.target.closest('button');
+            const orderCard = button.closest('.order-card');
+            
+            // Add a fade-out animation
+            orderCard.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+            orderCard.style.opacity = '0';
+            orderCard.style.transform = 'translateX(20px)';
+            
+            // Remove the card after animation completes
+            setTimeout(() => {
+                orderCard.remove();
+                
+                // Update the count in the header
+                updateOrderCount();
+                
+                // Show success message
+                showSuccessMessage(`Order ${orderId} approved successfully`);
+            }, 300);
+        }
+        
+        // Update order count in header
+        function updateOrderCount() {
+            const remainingOrders = document.querySelectorAll('.order-card').length;
+            const countElement = document.querySelector('p:contains("orders need prior authorization review")');
+            const headerSubtitle = document.querySelector('header p');
+            
+            if (remainingOrders === 0) {
+                headerSubtitle.textContent = 'No orders requiring approval';
+                // Could also show a "no orders" message
+                const ordersContainer = document.querySelector('.space-y-4');
+                ordersContainer.innerHTML = '<div class="text-center py-8 text-gray-500"><i class="w-12 h-12 mx-auto mb-4" data-lucide="check-circle"></i><p class="text-lg font-medium">All orders approved!</p><p class="text-sm">No orders currently require approval.</p></div>';
+                lucide.createIcons();
+            } else {
+                headerSubtitle.textContent = `${remainingOrders} order${remainingOrders === 1 ? '' : 's'} need prior authorization review`;
+            }
+            
+            // Update notification count
+            const notificationBadge = document.querySelector('.bg-red-500');
+            if (notificationBadge) {
+                notificationBadge.textContent = remainingOrders;
+                if (remainingOrders === 0) {
+                    notificationBadge.style.display = 'none';
+                }
+            }
+        }
+        
+        // Show success message
+        function showSuccessMessage(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+            successDiv.innerHTML = `<div class="flex items-center gap-2"><i class="w-4 h-4" data-lucide="check"></i><span>${message}</span></div>`;
+            document.body.appendChild(successDiv);
+            
+            // Initialize the icon
+            lucide.createIcons();
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                successDiv.style.opacity = '0';
+                setTimeout(() => successDiv.remove(), 300);
+            }, 3000);
+        }
+        
+        // Reject order function
+        function rejectOrder(orderId) {
+            currentOrderId = orderId;
+            const modal = document.getElementById('rejection-modal');
+            modal.classList.remove('hidden');
+        }
+        
+        // Modal handlers
+        document.addEventListener('DOMContentLoaded', function() {
+            // Rejection modal
+            const rejectionModal = document.getElementById('rejection-modal');
+            const cancelRejection = document.getElementById('cancel-rejection');
+            const confirmRejection = document.getElementById('confirm-rejection');
+            
+            cancelRejection?.addEventListener('click', () => {
+                rejectionModal.classList.add('hidden');
+                currentOrderId = null;
+            });
+            
+            confirmRejection?.addEventListener('click', () => {
+                rejectionModal.classList.add('hidden');
+                alert(`Order ${currentOrderId} rejected successfully`);
+                window.location.href = '/index.html';
+            });
+            
+            // Close modals when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === rejectionModal) {
+                    rejectionModal.classList.add('hidden');
+                    currentOrderId = null;
+                }
+            });
+        });
+    </script>
+</body></html>
+                

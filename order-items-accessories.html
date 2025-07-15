@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Comfort Care - Order Items &amp; Accessories</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>// Tailwind CSS configuration file
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            colors: {
+                primary: "hsl(from var(--primary) h s l)", // main color for buttons, links, etc
+                secondary: "hsl(from var(--secondary) h s l)", // secondary color for buttons, links, etc
+                accent: "hsl(from var(--accent) h s l)", // accent color
+                background: "hsl(from var(--background) h s l)", // body background color
+                foreground: "hsl(from var(--text) h s l)", // text color
+            },
+            fontFamily: {
+                header: ["var(--font-header)", "sans-serif"],
+                body: ["var(--font-body)", "sans-serif"],
+            },
+            borderRadius: {
+                default: 'var(--border-radius)',
+            },
+        },
+    },
+};</script>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans&display=swap');
+
+:root {
+    --text: #4A4A4A;
+    --accent: hsl(from var(--primary) calc(h + 60) calc(s - 10%) calc(l + 20%));
+    --primary: #8E4C77;
+    --font-body: Instrument Sans;
+    --secondary: #5B8C9F;
+    --background: #F7F7F9;
+    --font-header: Instrument Sans;
+    --border-radius: 8px;
+}
+
+
+.rounded-default {
+    border-radius: var(--border-radius);
+}
+
+.rounded-lg {
+    border-radius: calc(var(--border-radius) + 4px);
+}
+
+.rounded-md {
+    border-radius: calc(var(--border-radius) + 2px);
+}
+
+.rounded-sm {
+    border-radius: calc(var(--border-radius) - 2px);
+}
+</style>
+    <style>body {
+    color: var(--text);
+    font-family: var(--font-body);
+    background-color: var(--background);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text);
+    font-family: var(--font-header);
+}
+
+a {
+    color: var(--secondary);
+}
+
+a:hover {
+    color: hsl(from var(--secondary) h s calc(l * 0.8));
+}
+
+.btn {
+    font-weight: 600;
+    border-radius: var(--border-radius);
+}
+
+.btn:focus-visible {
+    outline-color: hsl(from var(--secondary) h s l);
+}
+
+.btn-primary {
+    color: #ffffff;
+    background-color: var(--primary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-primary:hover:not(:disabled) {
+    color: #ffffff;
+    background-color: hsl(from var(--primary) h s calc(l * 0.9));
+}
+
+.btn-secondary {
+    color: #ffffff;
+    border-radius: 9999px;
+    background-color: var(--secondary);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    color: #ffffff;
+    background-color: hsl(from var(--secondary) h s calc(l * 0.8));
+}
+
+.btn-ghost {
+    color: var(--text);
+    background-color: transparent;
+}
+
+.btn-ghost:hover:not(:disabled) {
+    background-color: hsl(from var(--text) h s l / 0.05);
+}
+
+.card {
+    border: 1px solid hsl(from var(--text) h s l / 0.1);
+    border-radius: calc(var(--border-radius) * 2);
+    background-color: #ffffff;
+}
+
+.form-control {
+    border: 1px solid hsl(from var(--text) h s l / 0.1);
+    border-radius: var(--border-radius);
+    background-color: #ffffff;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 3px hsl(from var(--secondary) h s l / 0.25);
+    border-color: var(--secondary);
+}
+
+.navbar {
+    background-color: #ffffff;
+}
+
+.nav-link {
+    color: var(--text);
+}
+
+.nav-link:hover {
+    color: var(--secondary);
+}
+
+.alert-success {
+    color: hsl(from var(--primary) h s 20%);
+    border-color: hsl(from var(--primary) h s 85%);
+    background-color: hsl(from var(--primary) h s 92%);
+}
+
+.alert-error {
+    color: hsl(from var(--primary) calc(h - 88) s 25%);
+    border-color: hsl(from var(--primary) calc(h - 88) s 85%);
+    background-color: hsl(from var(--primary) calc(h - 88) s 92%);
+}
+
+.alert-info {
+    color: hsl(from var(--secondary) h s 20%);
+    border-color: hsl(from var(--secondary) h s 85%);
+    background-color: hsl(from var(--secondary) h s 92%);
+}</style>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        .form-section {
+            transition: all 0.2s ease;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.625rem 0.75rem;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--border-radius);
+            background-color: white;
+            transition: border-color 0.2s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .form-input.pre-populated {
+            background-color: #f9f9fb;
+            border-color: #e5e7eb;
+        }
+        
+        .required-field::after {
+            content: "*";
+            color: hsl(from var(--primary) calc(h - 88) s l);
+            margin-left: 2px;
+        }
+        
+        .tab-button {
+            padding: 0.75rem 1rem;
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+            color: #6b7280;
+        }
+        
+        .tab-button.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+
+        
+        .status-badge {
+            font-size: 0.65rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+        
+        .status-badge.par-required {
+            background-color: #F8E5FF;
+            color: #9D4EDD;
+        }
+        
+        .status-badge.custom {
+            background-color: #E1F2FF;
+            color: #0078D7;
+        }
+        
+        .status-badge.standard {
+            background-color: #E3F7E9;
+            color: #2E7D41;
+        }
+        
+        .btn-sm {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-secondary:hover:not(:disabled) {
+            background-color: hsl(from var(--secondary) h s calc(l * 0.8));
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-background font-body">
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="bg-white shadow-sm py-4 px-6 sticky top-0 z-10">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <img alt="Comfort Care Logo" class="w-10 h-10 rounded-md" onerror="this.onerror=null; this.src='https://placehold.co/60x60/8E4C77/FFFFFF?text=CC'" src="https://placehold.co/60x60/8E4C77/FFFFFF?text=CC">
+                    <div>
+                        <h1 class="text-xl font-bold mb-0">Order Items</h1>
+                        <p class="text-sm text-gray-500">Add items and accessories to order</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <button class="p-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors" id="notifications-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="bell" class="lucide lucide-bell w-6 h-6"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
+                            <span class="sr-only">Notifications</span>
+                        </button>
+                    </div>
+                    
+                    <div class="relative">
+                        <button class="p-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors" id="profile-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="user" class="lucide lucide-user w-6 h-6"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                            <span class="sr-only">User Profile</span>
+                        </button>
+                        
+                        <div class="absolute top-full right-0 mt-2 w-48 bg-white rounded-md shadow-lg p-2 hidden" id="profile-dropdown">
+                            <div class="p-2 text-sm">
+                                <p class="font-medium">Amy Johnson</p>
+                                <p class="text-gray-500 text-xs">amy.j@comfortcare.com</p>
+                            </div>
+                            <div class="border-t border-gray-100 my-1"></div>
+                            <a class="flex items-center gap-2 p-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md" href="/login.html">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="log-out" class="lucide lucide-log-out w-4 h-4"><path d="m16 17 5-5-5-5"></path><path d="M21 12H9"></path><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path></svg>
+                                <span>Sign out</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <div class="p-6">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div class="mb-6">
+                        <h2 class="text-xl font-semibold mb-1">Order Items & Accessories</h2>
+                        <p class="text-sm text-gray-600">Add multiple items and accessories to your order</p>
+                    </div>
+                    
+                    <!-- Items List -->
+                    <div id="items-list" class="space-y-4 mb-6">
+                        <!-- Empty state message -->
+                        <div id="empty-state" class="text-center py-8 text-gray-500">
+                            <div class="mb-4">
+                                <i class="w-12 h-12 mx-auto text-gray-300" data-lucide="package"></i>
+                    </div>
+                            <p class="text-lg font-medium mb-2">No items added yet</p>
+                            <p class="text-sm mb-6">Get started by adding your first item or accessory</p>
+                            <div class="flex justify-center gap-3">
+                                                            <button class="btn flex items-center px-4 py-2" id="add-item-btn" style="background-color: #10b981; color: white;">
+                                <i class="w-4 h-4 mr-2" data-lucide="plus"></i>
+                            Add Item
+                        </button>
+                            <button class="btn flex items-center px-4 py-2" id="add-accessory-btn" style="background-color: #8b5cf6; color: white;">
+                                <i class="w-4 h-4 mr-2" data-lucide="plus"></i>
+                                Add Accessory
+                        </button>
+                    </div>
+                </div>
+                    </div>
+                    
+                    <!-- Add More Items Section (appears after first item) -->
+                    <div id="add-more-section" class="hidden border-t border-gray-200 pt-6 mb-6">
+                        <div class="flex justify-center gap-3">
+                            <button class="btn flex items-center px-4 py-2" id="add-more-item-btn" style="background-color: #10b981; color: white;">
+                                <i class="w-4 h-4 mr-2" data-lucide="plus"></i>
+                                Add Another Item
+                            </button>
+                            <button class="btn flex items-center px-4 py-2" id="add-more-accessory-btn" style="background-color: #8b5cf6; color: white;">
+                                <i class="w-4 h-4 mr-2" data-lucide="plus"></i>
+                                Add Another Accessory
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Item Form (Hidden by default) -->
+                    <div id="item-form" class="form-section hidden">
+                        <h3 class="text-lg font-semibold mb-4">Add Item</h3>
+                        
+                        <form id="item-form-element">
+                        <div class="mb-6">
+                            <h4 class="text-sm font-medium text-gray-500 mb-3">Required Information</h4>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 form-grid">
+                                <div class="mb-3">
+                                    <label class="form-label required-field" for="insurance">INSURANCE / ADMINISTRATOR</label>
+                                    <select class="form-input" id="insurance" name="insurance" required="">
+                                            <option value="">Select Insurance</option>
+                                            <option value="blue-cross">Blue Cross</option>
+                                        <option value="medicare">Medicare</option>
+                                        <option value="aetna">Aetna</option>
+                                        <option value="united">United Healthcare</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label required-field" for="hcpcs">HCPCS</label>
+                                    <select class="form-input" id="hcpcs" name="hcpcs" required="">
+                                            <option value="">Select HCPCS Code</option>
+                                            <option value="L8000">L8000 - Mastectomy Bra</option>
+                                        <option value="L8030">L8030 - Breast Prosthesis</option>
+                                        <option value="L8035">L8035 - Custom Breast Prosthesis</option>
+                                            <option value="L8040">L8040 - Breast Prosthesis Adhesive</option>
+                                            <option value="L8045">L8045 - Breast Prosthesis Sleeve</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label required-field" for="vendor">VENDOR</label>
+                                    <select class="form-input" id="vendor" name="vendor" required="">
+                                            <option value="">Select Vendor</option>
+                                            <option value="juzo">Juzo</option>
+                                        <option value="medi">Medi</option>
+                                            <option value="l-r">L&R</option>
+                                        <option value="affirm">Affirm</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label required-field" for="item-description">ITEM DESCRIPTION</label>
+                                        <input class="form-input" id="item-description" name="item-description" required="" type="text" placeholder="Enter item description"/>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h4 class="text-sm font-medium text-gray-500 mb-3">Additional Information</h4>
+                            <p class="text-xs text-gray-500 mb-3">These fields are automatically populated based on your selections above.</p>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 form-grid">
+                                <div class="mb-3">
+                                    <label class="form-label" for="lr">L/R</label>
+                                    <select class="form-input pre-populated" id="lr" name="lr">
+                                            <option value="">Select Side</option>
+                                            <option value="bilateral">Bilateral</option>
+                                        <option value="left">Left</option>
+                                        <option value="right">Right</option>
+                                            <option value="na">N/A</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label" for="units">UNIT(S)</label>
+                                        <input class="form-input pre-populated" id="units" name="units" type="number" placeholder="0"/>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label" for="uom">UOM</label>
+                                    <select class="form-input pre-populated" id="uom" name="uom">
+                                            <option value="">Select UOM</option>
+                                            <option value="each">Each</option>
+                                        <option value="pair">Pair</option>
+                                        <option value="box">Box</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label" for="cost-per-unit">COST PER UNIT</label>
+                                        <input class="form-input pre-populated" id="cost-per-unit" name="cost-per-unit" type="text" placeholder="$0.00"/>
+                                </div>
+                                
+                                <div class="mb-3 md:col-span-2">
+                                    <label class="form-label" for="allowed-amount">ALLOWED AMT OR MULTIPLIER</label>
+                                        <input class="form-input pre-populated" id="allowed-amount" name="allowed-amount" type="text" placeholder="$0.00"/>
+                                    </div>
+                                    
+                                    <div class="mb-3 md:col-span-2">
+                                        <label class="form-label" for="measurement-form">MEASUREMENT FORM ATTACHMENT</label>
+                                        <input class="form-input" id="measurement-form" name="measurement-form" type="file" accept=".pdf,.jpg,.jpeg,.png"/>
+                                        <p class="text-xs text-gray-500 mt-1">Attach measurement form if item is customizable</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                                                    <div class="mt-8 flex justify-end">
+                            <div class="flex space-x-3">
+                                <button class="btn btn-ghost border border-gray-200 px-4 py-2" type="button" id="cancel-item-btn">
+                                    Cancel
+                                </button>
+                                <button class="btn px-6 py-2" type="submit" style="background-color: #10b981; color: white;">
+                                    Add Item
+                                </button>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Accessory Form (Hidden by default) -->
+                    <div id="accessory-form" class="form-section hidden">
+                        <h3 class="text-lg font-semibold mb-4">Add Accessory</h3>
+                        
+                        <form id="accessory-form-element">
+                            <div class="mb-6">
+                                <h4 class="text-sm font-medium text-gray-500 mb-3">Required Information</h4>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 form-grid">
+                                    <div class="mb-3">
+                                        <label class="form-label required-field" for="acc-insurance">INSURANCE / ADMINISTRATOR</label>
+                                        <select class="form-input" id="acc-insurance" name="acc-insurance" required="">
+                                            <option value="">Select Insurance</option>
+                                            <option value="blue-cross">Blue Cross</option>
+                                            <option value="medicare">Medicare</option>
+                                            <option value="aetna">Aetna</option>
+                                            <option value="united">United Healthcare</option>
+                                        </select>
+                </div>
+                
+                                    <div class="mb-3">
+                                        <label class="form-label required-field" for="acc-hcpcs">HCPCS</label>
+                                        <select class="form-input" id="acc-hcpcs" name="acc-hcpcs" required="">
+                                            <option value="">Select HCPCS Code</option>
+                                            <option value="A4452">A4452 - Adhesive Strips</option>
+                                            <option value="A4453">A4453 - Adhesive Remover</option>
+                                            <option value="A4454">A4454 - Cleaning Solution</option>
+                                            <option value="A4455">A4455 - Protective Cover</option>
+                                        </select>
+                                </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label required-field" for="acc-vendor">VENDOR</label>
+                                        <select class="form-input" id="acc-vendor" name="acc-vendor" required="">
+                                            <option value="">Select Vendor</option>
+                                            <option value="juzo">Juzo</option>
+                                            <option value="medi">Medi</option>
+                                            <option value="l-r">L&R</option>
+                                            <option value="affirm">Affirm</option>
+                                        </select>
+                            </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label required-field" for="acc-description">ITEM DESCRIPTION</label>
+                                        <input class="form-input" id="acc-description" name="acc-description" required="" type="text" placeholder="Enter accessory description"/>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <h4 class="text-sm font-medium text-gray-500 mb-3">Additional Information</h4>
+                                <p class="text-xs text-gray-500 mb-3">These fields are automatically populated based on your selections above.</p>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 form-grid">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="acc-lr">L/R</label>
+                                        <select class="form-input pre-populated" id="acc-lr" name="acc-lr">
+                                            <option value="">Select Side</option>
+                                            <option value="bilateral">Bilateral</option>
+                                            <option value="left">Left</option>
+                                            <option value="right">Right</option>
+                                            <option value="na">N/A</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label" for="acc-units">UNIT(S)</label>
+                                        <input class="form-input pre-populated" id="acc-units" name="acc-units" type="number" placeholder="0"/>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label" for="acc-uom">UOM</label>
+                                        <select class="form-input pre-populated" id="acc-uom" name="acc-uom">
+                                            <option value="">Select UOM</option>
+                                            <option value="each">Each</option>
+                                            <option value="pair">Pair</option>
+                                            <option value="box">Box</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label" for="acc-cost-per-unit">COST PER UNIT</label>
+                                        <input class="form-input pre-populated" id="acc-cost-per-unit" name="acc-cost-per-unit" type="text" placeholder="$0.00"/>
+                                    </div>
+                                    
+                                    <div class="mb-3 md:col-span-2">
+                                        <label class="form-label" for="acc-allowed-amount">ALLOWED AMT OR MULTIPLIER</label>
+                                        <input class="form-input pre-populated" id="acc-allowed-amount" name="acc-allowed-amount" type="text" placeholder="$0.00"/>
+                                    </div>
+                                    
+                                    <div class="mb-3 md:col-span-2">
+                                        <label class="form-label" for="acc-measurement-form">MEASUREMENT FORM ATTACHMENT</label>
+                                        <input class="form-input" id="acc-measurement-form" name="acc-measurement-form" type="file" accept=".pdf,.jpg,.jpeg,.png"/>
+                                        <p class="text-xs text-gray-500 mt-1">Attach measurement form if accessory is customizable</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-8 flex justify-end">
+                                <div class="flex space-x-3">
+                                    <button class="btn btn-ghost border border-gray-200 px-4 py-2" type="button" id="cancel-accessory-btn">
+                                        Cancel
+                                    </button>
+                                    <button class="btn px-6 py-2" type="submit" style="background-color: #8b5cf6; color: white;">
+                                        Add Accessory
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                                        <div class="mt-8 flex justify-between items-center" id="bottom-buttons">
+                        <a class="btn btn-ghost border border-gray-200 flex items-center px-4 py-2" href="/encounter/new.html">
+                                    <i class="w-4 h-4 mr-2" data-lucide="arrow-left"></i>
+                            Back to Encounter
+                                </a>
+                        <button class="btn btn-primary px-6 py-2 flex items-center hidden" type="button" id="continue-review-btn">
+                            Continue
+                                    <i class="w-4 h-4 ml-2" data-lucide="arrow-right"></i>
+                        </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+            
+            // Notification button click handler
+            const notificationsButton = document.getElementById('notifications-button');
+            notificationsButton.addEventListener('click', () => {
+                // Navigate to approval management screen
+                window.location.href = '/approval-management.html';
+            });
+            
+            // Profile dropdown toggle
+            const profileButton = document.getElementById('profile-button');
+            const profileDropdown = document.getElementById('profile-dropdown');
+            
+            profileButton.addEventListener('click', () => {
+                profileDropdown.classList.toggle('hidden');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (event) => {
+                if (!profileButton.contains(event.target) && !profileDropdown.contains(event.target)) {
+                    profileDropdown.classList.add('hidden');
+                }
+            });
+            
+            // Form management
+            const itemForm = document.getElementById('item-form');
+            const accessoryForm = document.getElementById('accessory-form');
+            const cancelItemBtn = document.getElementById('cancel-item-btn');
+            const cancelAccessoryBtn = document.getElementById('cancel-accessory-btn');
+            const itemsList = document.getElementById('items-list');
+            const emptyState = document.getElementById('empty-state');
+            const addMoreItemBtn = document.getElementById('add-more-item-btn');
+            const addMoreAccessoryBtn = document.getElementById('add-more-accessory-btn');
+            const addMoreSection = document.getElementById('add-more-section');
+            
+            // Show item form function
+            function showItemForm() {
+                itemForm.classList.remove('hidden');
+                accessoryForm.classList.add('hidden');
+                emptyState.classList.add('hidden');
+                updateContinueButtonVisibility();
+                itemForm.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            // Show accessory form function
+            function showAccessoryForm() {
+                accessoryForm.classList.remove('hidden');
+                itemForm.classList.add('hidden');
+                emptyState.classList.add('hidden');
+                updateContinueButtonVisibility();
+                accessoryForm.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            // Update continue button visibility and add more section
+            function updateContinueButtonVisibility() {
+                const continueBtn = document.getElementById('continue-review-btn');
+                const itemCards = itemsList.querySelectorAll('.bg-white.border.border-gray-200.rounded-lg');
+                const isFormVisible = !itemForm.classList.contains('hidden') || !accessoryForm.classList.contains('hidden');
+                
+                // Show continue button only if there are items AND no form is currently visible
+                if (itemCards.length > 0 && !isFormVisible) {
+                    continueBtn.classList.remove('hidden');
+                    } else {
+                    continueBtn.classList.add('hidden');
+                }
+                
+                // Show/hide add more section based on form visibility
+                if (itemCards.length > 0 && !isFormVisible) {
+                    addMoreSection.classList.remove('hidden');
+                } else {
+                    addMoreSection.classList.add('hidden');
+                }
+            }
+            
+            // Bind events to add buttons (using event delegation for dynamic buttons)
+            document.addEventListener('click', function(e) {
+                if (e.target.id === 'add-item-btn' || e.target.id === 'add-more-item-btn') {
+                    showItemForm();
+                } else if (e.target.id === 'add-accessory-btn' || e.target.id === 'add-more-accessory-btn') {
+                    showAccessoryForm();
+                }
+            });
+            
+            // Cancel item form
+            cancelItemBtn.addEventListener('click', function() {
+                itemForm.classList.add('hidden');
+                document.getElementById('item-form-element').reset();
+                
+                // Show empty state if no items exist
+                const itemCards = itemsList.querySelectorAll('.bg-white.border.border-gray-200.rounded-lg');
+                if (itemCards.length === 0) {
+                    emptyState.classList.remove('hidden');
+                }
+                
+                updateContinueButtonVisibility();
+            });
+            
+            // Cancel accessory form
+            cancelAccessoryBtn.addEventListener('click', function() {
+                accessoryForm.classList.add('hidden');
+                document.getElementById('accessory-form-element').reset();
+                
+                // Show empty state if no items exist
+                const itemCards = itemsList.querySelectorAll('.bg-white.border.border-gray-200.rounded-lg');
+                if (itemCards.length === 0) {
+                    emptyState.classList.remove('hidden');
+                }
+                
+                updateContinueButtonVisibility();
+            });
+            
+            // Handle item form submission
+            document.getElementById('item-form-element').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const itemData = Object.fromEntries(formData);
+                
+                // Hide empty state if it's visible
+                emptyState.classList.add('hidden');
+                
+                // Create item card
+                const itemCard = createItemCard(itemData, 'item');
+                itemsList.appendChild(itemCard);
+                
+                // Hide form and reset
+                itemForm.classList.add('hidden');
+                this.reset();
+                
+                // Update continue button visibility
+                updateContinueButtonVisibility();
+                
+                // Scroll to the new item
+                itemCard.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // Handle accessory form submission
+            document.getElementById('accessory-form-element').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const accessoryData = Object.fromEntries(formData);
+                
+                // Hide empty state if it's visible
+                emptyState.classList.add('hidden');
+                
+                // Create accessory card
+                const accessoryCard = createItemCard(accessoryData, 'accessory');
+                itemsList.appendChild(accessoryCard);
+                
+                // Hide form and reset
+                accessoryForm.classList.add('hidden');
+                this.reset();
+                
+                // Update continue button visibility
+                updateContinueButtonVisibility();
+                
+                // Scroll to the new accessory
+                accessoryCard.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // Function to create item/accessory cards
+            function createItemCard(data, type) {
+                const card = document.createElement('div');
+                card.className = 'bg-white border border-gray-200 rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow';
+                
+                const typeLabel = type === 'item' ? 'Item' : 'Accessory';
+                const hcpcsField = type === 'item' ? 'hcpcs' : 'acc-hcpcs';
+                const descriptionField = type === 'item' ? 'item-description' : 'acc-description';
+                const vendorField = type === 'item' ? 'vendor' : 'acc-vendor';
+                const unitsField = type === 'item' ? 'units' : 'acc-units';
+                
+                card.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-4 flex-1">
+                            <div class="flex-shrink-0">
+                                <div class="w-8 h-8 rounded-full ${type === 'item' ? 'bg-blue-100' : 'bg-purple-100'} flex items-center justify-center">
+                                    <i class="w-4 h-4 ${type === 'item' ? 'text-blue-600' : 'text-purple-600'}" data-lucide="${type === 'item' ? 'package' : 'wrench'}"></i>
+                                </div>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <h4 class="font-medium text-gray-900 truncate">${data[descriptionField] || 'Unnamed ' + typeLabel}</h4>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                                        ${data[hcpcsField] || 'N/A'}
+                                    </span>
+                                </div>
+                                <div class="flex items-center gap-6 text-sm text-gray-600">
+                                    <span><strong>Vendor:</strong> ${data[vendorField] || 'N/A'}</span>
+                                    <span><strong>Units:</strong> ${data[unitsField] || 'N/A'}</span>
+                                    <span><strong>Cost:</strong> ${data[type === 'item' ? 'cost-per-unit' : 'acc-cost-per-unit'] || 'N/A'}</span>
+                                    <span><strong>Allowed:</strong> ${data[type === 'item' ? 'allowed-amount' : 'acc-allowed-amount'] || 'N/A'}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 ml-4">
+                            <button class="btn btn-ghost btn-sm edit-btn p-2 hover:bg-gray-100 rounded-md" data-type="${type}" title="Edit ${typeLabel}">
+                                <i class="w-4 h-4 text-gray-600" data-lucide="edit"></i>
+                            </button>
+                            <button class="btn btn-ghost btn-sm delete-btn p-2 hover:bg-red-50 rounded-md text-red-600" title="Delete ${typeLabel}">
+                                <i class="w-4 h-4" data-lucide="trash-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                // Add event listeners for edit and delete
+                card.querySelector('.delete-btn').addEventListener('click', function() {
+                    if (confirm('Are you sure you want to delete this ' + typeLabel.toLowerCase() + '?')) {
+                        card.remove();
+                        
+                        // Check if items list is empty and show empty state
+                        const remainingItems = itemsList.querySelectorAll('.bg-white.border.border-gray-200.rounded-lg');
+                        if (remainingItems.length === 0) {
+                            emptyState.classList.remove('hidden');
+                        }
+                        
+                        // Update continue button visibility and add more section
+                        updateContinueButtonVisibility();
+                    }
+                });
+                
+                card.querySelector('.edit-btn').addEventListener('click', function() {
+                    // Show appropriate form for editing
+                    if (type === 'item') {
+                        populateItemForm(data);
+                        itemForm.classList.remove('hidden');
+                        accessoryForm.classList.add('hidden');
+                    } else {
+                        populateAccessoryForm(data);
+                        accessoryForm.classList.remove('hidden');
+                        itemForm.classList.add('hidden');
+                    }
+                    // Remove the card since we're editing it
+                    card.remove();
+                    
+                    // Update continue button visibility
+                    updateContinueButtonVisibility();
+                });
+                
+                return card;
+            }
+            
+            // Function to populate item form for editing
+            function populateItemForm(data) {
+                document.getElementById('insurance').value = data.insurance || '';
+                document.getElementById('hcpcs').value = data.hcpcs || '';
+                document.getElementById('vendor').value = data.vendor || '';
+                document.getElementById('item-description').value = data['item-description'] || '';
+                document.getElementById('lr').value = data.lr || '';
+                document.getElementById('units').value = data.units || '';
+                document.getElementById('uom').value = data.uom || '';
+                document.getElementById('cost-per-unit').value = data['cost-per-unit'] || '';
+                document.getElementById('allowed-amount').value = data['allowed-amount'] || '';
+            }
+            
+            // Function to populate accessory form for editing
+            function populateAccessoryForm(data) {
+                document.getElementById('acc-insurance').value = data['acc-insurance'] || '';
+                document.getElementById('acc-hcpcs').value = data['acc-hcpcs'] || '';
+                document.getElementById('acc-vendor').value = data['acc-vendor'] || '';
+                document.getElementById('acc-description').value = data['acc-description'] || '';
+                document.getElementById('acc-lr').value = data['acc-lr'] || '';
+                document.getElementById('acc-units').value = data['acc-units'] || '';
+                document.getElementById('acc-uom').value = data['acc-uom'] || '';
+                document.getElementById('acc-cost-per-unit').value = data['acc-cost-per-unit'] || '';
+                document.getElementById('acc-allowed-amount').value = data['acc-allowed-amount'] || '';
+            }
+            
+            // Pre-population logic for Items
+            const hcpcsSelect = document.getElementById('hcpcs');
+            hcpcsSelect.addEventListener('change', function() {
+                const selectedHcpcs = this.value;
+                
+                // Update item description based on HCPCS
+                const itemDescription = document.getElementById('item-description');
+                const lrSelect = document.getElementById('lr');
+                const unitsInput = document.getElementById('units');
+                const uomSelect = document.getElementById('uom');
+                const costPerUnitInput = document.getElementById('cost-per-unit');
+                const allowedAmountInput = document.getElementById('allowed-amount');
+                
+                if (selectedHcpcs === 'L8000') {
+                    itemDescription.value = 'Mastectomy Bra';
+                    lrSelect.value = 'bilateral';
+                    unitsInput.value = '2';
+                    uomSelect.value = 'each';
+                    costPerUnitInput.value = '$45.00';
+                    allowedAmountInput.value = '$65.00';
+                } else if (selectedHcpcs === 'L8030') {
+                    itemDescription.value = 'Breast Prosthesis';
+                    lrSelect.value = 'bilateral';
+                    unitsInput.value = '1';
+                    uomSelect.value = 'each';
+                    costPerUnitInput.value = '$325.00';
+                    allowedAmountInput.value = '$450.00';
+                } else if (selectedHcpcs === 'L8035') {
+                    itemDescription.value = 'Custom Breast Prosthesis';
+                    lrSelect.value = 'bilateral';
+                    unitsInput.value = '1';
+                    uomSelect.value = 'each';
+                    costPerUnitInput.value = '$425.00';
+                    allowedAmountInput.value = '$550.00';
+                } else if (selectedHcpcs === 'L8040') {
+                    itemDescription.value = 'Breast Prosthesis Adhesive';
+                    lrSelect.value = 'na';
+                    unitsInput.value = '1';
+                    uomSelect.value = 'box';
+                    costPerUnitInput.value = '$25.00';
+                    allowedAmountInput.value = '$35.00';
+                } else if (selectedHcpcs === 'L8045') {
+                    itemDescription.value = 'Breast Prosthesis Sleeve';
+                    lrSelect.value = 'bilateral';
+                    unitsInput.value = '1';
+                    uomSelect.value = 'each';
+                    costPerUnitInput.value = '$15.00';
+                    allowedAmountInput.value = '$25.00';
+                }
+            });
+            
+            // Pre-population logic for Accessories
+            const accHcpcsSelect = document.getElementById('acc-hcpcs');
+            accHcpcsSelect.addEventListener('change', function() {
+                const selectedHcpcs = this.value;
+                
+                // Update accessory description based on HCPCS
+                const accDescription = document.getElementById('acc-description');
+                const accLrSelect = document.getElementById('acc-lr');
+                const accUnitsInput = document.getElementById('acc-units');
+                const accUomSelect = document.getElementById('acc-uom');
+                const accCostPerUnitInput = document.getElementById('acc-cost-per-unit');
+                const accAllowedAmountInput = document.getElementById('acc-allowed-amount');
+                
+                if (selectedHcpcs === 'A4452') {
+                    accDescription.value = 'Adhesive Strips';
+                    accLrSelect.value = 'na';
+                    accUnitsInput.value = '1';
+                    accUomSelect.value = 'box';
+                    accCostPerUnitInput.value = '$12.00';
+                    accAllowedAmountInput.value = '$18.00';
+                } else if (selectedHcpcs === 'A4453') {
+                    accDescription.value = 'Adhesive Remover';
+                    accLrSelect.value = 'na';
+                    accUnitsInput.value = '1';
+                    accUomSelect.value = 'each';
+                    accCostPerUnitInput.value = '$8.00';
+                    accAllowedAmountInput.value = '$12.00';
+                } else if (selectedHcpcs === 'A4454') {
+                    accDescription.value = 'Cleaning Solution';
+                    accLrSelect.value = 'na';
+                    accUnitsInput.value = '1';
+                    accUomSelect.value = 'each';
+                    accCostPerUnitInput.value = '$10.00';
+                    accAllowedAmountInput.value = '$15.00';
+                } else if (selectedHcpcs === 'A4455') {
+                    accDescription.value = 'Protective Cover';
+                    accLrSelect.value = 'na';
+                    accUnitsInput.value = '1';
+                    accUomSelect.value = 'each';
+                    accCostPerUnitInput.value = '$5.00';
+                    accAllowedAmountInput.value = '$8.00';
+                }
+            });
+            
+            // Handle Continue to Review button
+            document.getElementById('continue-review-btn').addEventListener('click', function() {
+                // Navigate to order review document generation
+                window.location.href = '/order-review-document-generation.html';
+            });
+        });
+    </script>
+
+</body></html>
+                
